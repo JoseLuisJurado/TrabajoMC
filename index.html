@@ -27,23 +27,44 @@
 
       <aside class="col-12 col-md-3 col-xl-2 p-0 bg-light px-3 flex-shrink-1 p-2">
         <div id="valores" class="row">
-          <div>
+          <div class="seccion">
             Valores
           </div>
-          <div class="row px-5">
-            <label class="" for="vars">Iteraciones (n)</label>
-            <input class="col-11"type="text" id="vars" value="x">
+          <div class="row p-2">
+            <label class="col-md" for="vars">Iteraciones (n)</label>
+            <input class="col-sm-4" style="text-align:right" type="text" id="vars" value="100">
           </div>
-          <div class="row col-7 p-2">
-            <label class="" for="vars">Variables</label>
-            <input type="text" id="vars" value="x" placeholder="Introduce las variables (separadas por coma)">
+          <div class="row p-2">
+            <label class="col-md" for="vars">Iteraciones finales (0 si no hay final)</label>
+            <input class="col-sm-4" style="text-align:right" type="text" id="vars" value="0">
+          </div>        
+          <div class="row p-2">
+            <label class="col-md" for="vars">X máxima</label>
+            <input class="col-sm-4" style="text-align:right" type="text" id="vars" value="10">
+          </div>
+          <div class="row p-2">
+            <label class="col-md" for="vars">X minima</label>
+            <input class="col-sm-4" style="text-align:right" type="text" id="vars" value="10">
+          </div>
+          <div class="row p-2">
+            <label class="col-md" for="vars">Y máxima</label>
+            <input class="col-sm-4" style="text-align:right" type="text" id="vars" value="10">
+          </div>
+          <div class="row p-2">
+            <label class="col-md" for="vars">Y minima</label>
+            <input class="col-sm-4" style="text-align:right" type="text" id="vars" value="10">
+          </div>
 
+        </div>
+        <div id="parametros" class="row">
+          <div class="seccion">
+            Parámetros
           </div>
-          <div class="row col-7 p-2">
-            <label class="" for="vars">Variables</label>
-            <input type="text" id="vars" value="x" placeholder="Introduce las variables (separadas por coma)">
+          <div class="row p-2">
+            <label class="col-md" for="vars">Han de ser generados</label>
+            <input class="col-sm-4" style="text-align:right" type="text" id="vars" value="0">
+          </div>
 
-          </div>
 
         </div>
       </aside>
