@@ -33,4 +33,9 @@ const contenido = document.getElementById('content');
 
 init();
 
+$(function() {
+    $("#vars").change(function() {
+      console.log(this);
+    });
+});
 
