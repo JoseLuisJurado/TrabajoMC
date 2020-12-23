@@ -23,8 +23,8 @@
   
   </head>
 
-  <!-- <body >onload="init()"> -->
-    <body>
+  <body onload="init()">
+    <!-- <body> -->
     <header class="align-items-center container-lg mx p-5 text-center">
       <h1>Representación de sistemas discretos bidimensionales</h1>
     </header>
@@ -74,7 +74,7 @@
                 style="text-align: right"
                 type="text"
                 id="x-min"
-                value="10"
+                value="0"
               />
             </div>
             <div class="row p-2">
@@ -94,7 +94,7 @@
                 style="text-align: right"
                 type="text"
                 id="y-min"
-                value="10"
+                value="0"
               />
             </div>
           </div>
@@ -107,7 +107,17 @@
                 style="text-align: right"
                 type="text"
                 id="x0"
-                value="10"
+                value="0"
+              />
+            </div>
+            <div class="row p-2">
+              <label class="col-md" for="vars">Y<sub>0</sub></label>
+              <input
+                class="col-sm-4"
+                style="text-align: right"
+                type="text"
+                id="y0"
+                value="1"
               />
             </div>
           </div>
