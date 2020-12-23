@@ -3,10 +3,10 @@
 //Parámetros
 const contenido = document.getElementById("content");
 const param_content = document.getElementById("parametros")
+var stored_vars = [];
 var stored_equation = [];
 var expr0;
 var expr1;
-
 var iterations = 0;
 var final_iterations = 0;
 var x_min = 0;
@@ -72,19 +72,9 @@ function fixed_points() {
 }
 
 function points_stability(){
-  const parser = new math.parser()
-  parser.set('x', x0)
-  parser.set('y', y0)
-  var jacobian_matrix = math.matrix([
-    [math.derivative(stored_equation[0],'x'),
-     math.derivative(stored_equation[0],'y')],
-    [math.derivative(stored_equation[1],'x'),
-     math.derivative(stored_equation[1],'y')]
-    ]);
-
-  var parser_matrix = parser.evaluate(jacobian_matrix.toString());
-  console.log(parser_matrix.toString());
-  console.log(math.eigs(parser_matrix));
+  var jacobian_matrix = math.matrix([[math.derivative(stored_equation[0],'x'),math.derivative(stored_equation[0],'y')],[math.derivative(stored_equation[1],'x'),math.derivative(stored_equation[1],'y')]]);
+  var eigen_values = math.evaluate(jacobian_matrix,{x:3,y:5});
+  console.log(eigen_values.toString());
 }
 
 function orbita2dF() {
