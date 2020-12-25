@@ -26,7 +26,10 @@ g = None
 
 @app.route('/')
 def init():
-    return render_template("index.html")
+    funciones = "1.2-x^2+0.4*y,x".split(',')
+    f = p.parse(funciones[0])
+    g = p.parse(funciones[1])
+    return render_template("index.html", f=f, g=g)
 
 @app.route('/', methods=["POST"])
 def load_params():
@@ -46,7 +49,7 @@ def load_params():
     puntos_fijos = solve([f==x, g==y], x, y, solution_dict=True)
     print(puntos_fijos)
     estabilidad_puntos = points_stability(f, g, puntos_fijos)
-    return render_template('index.html', puntos_fijos=puntos_fijos, estabilidad_puntos=estabilidad_puntos)
+    return render_template('index.html', puntos_fijos=puntos_fijos, estabilidad_puntos=estabilidad_puntos, f=f, g=g)
 
 def points_stability(f, g, puntos_fijos):
     estabilidad_puntos = list()

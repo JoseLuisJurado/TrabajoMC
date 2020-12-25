@@ -69,6 +69,7 @@ function orbita2dF() {
   } else{
     n = iterations;
   }
+
   for (let i = 0; i < n; i++) {
 
     x_cal = expr0.evaluate(itMap);
@@ -97,9 +98,6 @@ function plot() {
 }
 
 function plot2() {
-
-  // evaluate the expression repeatedly for different values of x and y
-  // orbit = orbita2dF();
 
   // render the plot using plotly
   const trace1 = {
