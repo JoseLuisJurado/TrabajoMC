@@ -22,6 +22,7 @@ x0 = None
 y0 = None
 f = None
 g = None
+
 @app.route('/')
 def init():
     return render_template("index.html")
@@ -44,19 +45,6 @@ def load_params():
     puntos_fijos = solve([f==x, g==y], x, y)
     print(puntos_fijos)
     return '', 204
-
-# @app.route('/', methods=["POST"])
-# def load_params():
-#     n = request.form["n"]
-#     # m = int(request.form["m"])
-#     # x_max = int(request.form["x-max"])
-#     # x_min = int(request.form["x-min"])
-#     # y_max = int(request.form["y-max"])
-#     # y_min = int(request.form["y-min"])
-#     # x0 = int(request.form["x0"])
-#     # y0 = int(request.form["y0"])
-#     print(f"n: {n}")#, m: {m}, x-max: {x_max}, x_min: {x_min}, y_max: {y_max}, y_min: {y_min}, x_0: {x_0}, y_0: {y_0}")
-#     return '', 204
 
 
 if __name__ == '__main__':
