@@ -33,7 +33,7 @@ def load_params():
     funciones = request.form['eq'].split(',')
     f = p.parse(funciones[0])
     g = p.parse(funciones[1])
-    n = request.form["n"]
+    n = int(request.form["n"])
     m = int(request.form["m"])
     x_max = int(request.form["x-max"])
     x_min = int(request.form["x-min"])
@@ -65,7 +65,6 @@ def points_stability(f, g, puntos_fijos):
             estabilidad_puntos.append((point,"punto atractivo."))
 
     return estabilidad_puntos
-
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port = 5500)

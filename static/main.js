@@ -27,7 +27,6 @@ function init() {
   go_button.addEventListener("click", function () {
     grab_vars();
     plot();
-    points_stability();
   });
 }
 
@@ -46,13 +45,6 @@ function grab_vars() {
     values["y"] = document.getElementById("y0").value;
     go_button = document.getElementById("go_button");
   } catch (err) {}
-}
-
-
-function points_stability(){
-  var jacobian_matrix = math.matrix([[math.derivative(stored_equation[0],'x'),math.derivative(stored_equation[0],'y')],[math.derivative(stored_equation[1],'x'),math.derivative(stored_equation[1],'y')]]);
-  var eigen_values = math.evaluate(jacobian_matrix,{x:3,y:5});
-  console.log(eigen_values.toString());
 }
 
 function orbita2dF() {
