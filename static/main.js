@@ -16,6 +16,7 @@ var values = {}
 var go_button = document.body;
 var points = [];
 var params = [];
+var orbit;
 // Funciones
 
 
@@ -98,7 +99,7 @@ function plot() {
 function plot2() {
 
   // evaluate the expression repeatedly for different values of x and y
-  orbit = orbita2dF();
+  // orbit = orbita2dF();
 
   // render the plot using plotly
   const trace1 = {
