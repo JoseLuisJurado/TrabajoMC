@@ -43,8 +43,13 @@ def load_params():
     print(f,g)
     print(f"n: {n}, m: {m}, x-max: {x_max}, x_min: {x_min}, y_max: {y_max}, y_min: {y_min}, x_0: {x0}, y_0: {y0}")
     puntos_fijos = solve([f==x, g==y], x, y, solution_dict=True)
-    print(puntos_fijos)
+    estabilidad_punts = points_stability(f, g)
     return render_template('index.html', puntos_fijos=puntos_fijos)
+
+def points_stability(f, g):
+    estabilidad_puntos = list()
+    print(vector([f,g]))
+    return estabilidad_puntos
 
 
 if __name__ == '__main__':
