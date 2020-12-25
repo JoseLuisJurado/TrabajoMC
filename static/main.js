@@ -3,7 +3,6 @@
 //Parámetros
 const contenido = document.getElementById("content");
 const param_content = document.getElementById("parametros")
-var stored_vars = [];
 var stored_equation = [];
 var expr0;
 var expr1;
@@ -19,13 +18,6 @@ var points = [];
 var params = [];
 // Funciones
 
-function print_mode(html_path, element) {
-  fetch(html_path)
-    .then((response) => response.text())
-    .then((data) => {
-      element.innerHTML = data;
-    });
-}
 
 function init() {
   //const contenido_basico = "\\templates\\contenido_basico.html";
@@ -35,7 +27,6 @@ function init() {
   go_button.addEventListener("click", function () {
     grab_vars();
     plot();
-    //fixed_points();
     points_stability();
   });
 }
@@ -57,17 +48,6 @@ function grab_vars() {
   } catch (err) {}
 }
 
-function fixed_points() {
-  var x = nerdamer.solveEquations([
-    stored_equation[0] + "=x",
-    stored_equation[1] + "=y",
-  ]);
-  
-  points = x;
-  var string_points = `${x[0][0]}: ${x[0][1]}, ${x[1][0]}: ${x[1][1]} `
-
-  //document.getElementById("fixed_points").innerHTML = string_points;
-}
 
 function points_stability(){
   var jacobian_matrix = math.matrix([[math.derivative(stored_equation[0],'x'),math.derivative(stored_equation[0],'y')],[math.derivative(stored_equation[1],'x'),math.derivative(stored_equation[1],'y')]]);
@@ -119,37 +99,4 @@ function plot() {
 
   const data = [trace1];
   Plotly.newPlot("plot", data);
-}
-
-function load_params(){
-  stored_equation = document.getElementById("eq").value.split(",");
-  expr0 = math.parse(stored_equation[0])
-  expr1 = math.parse(stored_equation[1])
-  var param_vistos = [];
-  expr0.forEach(function (node, path, parent){
-    switch (node.type){
-      case 'SymbolNode':
-        console.log(`Se ha visto: ${node.name}`)
-        param_vistos.push(node.name)
-        if (!(values.hasOwnProperty
-          (node.name))){
-          values[node.name] = 0;
-        }
-    }
-  })  
-  expr1.forEach(function (node, path, parent){
-    switch (node.type){
-      case 'SymbolNode':
-        console.log(`Se ha visto: ${node.name}`)
-        param_vistos.push(node.name)
-        if (!(values.hasOwnProperty(node.name))){
-          values[node.name] = 0;
-        }
-    }
-  })
-  Object.keys(values).forEach( function (param){
-    if (!(param_vistos.includes(param))){
-      delete values.param
-    }
-  })
 }

@@ -38,13 +38,13 @@ def load_params():
     x_min = int(request.form["x-min"])
     y_max = int(request.form["y-max"])
     y_min = int(request.form["y-min"])
-    x0 = int(request.form["x0"])
-    y0 = int(request.form["y0"])
+    x0 = float(request.form["x0"])
+    y0 = float(request.form["y0"])
     print(f,g)
     print(f"n: {n}, m: {m}, x-max: {x_max}, x_min: {x_min}, y_max: {y_max}, y_min: {y_min}, x_0: {x0}, y_0: {y0}")
-    puntos_fijos = solve([f==x, g==y], x, y)
+    puntos_fijos = solve([f==x, g==y], x, y, solution_dict=True)
     print(puntos_fijos)
-    return '', 204
+    return render_template('index.html', puntos_fijos=puntos_fijos)
 
 
 if __name__ == '__main__':
