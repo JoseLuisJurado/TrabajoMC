@@ -24,9 +24,11 @@ function init() {
   //print_mode(contenido_basico, contenido);
   grab_vars()
   plot();
+  plot2();
   go_button.addEventListener("click", function () {
     grab_vars();
     plot();
+    plot2();
   });
 }
 
@@ -91,4 +93,33 @@ function plot() {
 
   const data = [trace1];
   Plotly.newPlot("plot", data);
+}
+
+function plot2() {
+
+  // evaluate the expression repeatedly for different values of x and y
+  orbit = orbita2dF();
+
+  // render the plot using plotly
+  const trace1 = {
+    x: orbit[0],
+    y: orbit[1],
+    mode:'markers',
+    type: "scatter",
+    marker:{size:10 }
+  };
+  
+  const layout = {
+    // xaxis: {
+    //   range: [x_min,x_max]
+    // },
+    // yaxis: {
+    //   range: [y_min,y_max]
+    // },
+    title:'Representación de los atractores'
+  };
+
+  const data = [trace1];
+  Plotly.newPlot("plot2", data, layout);
+
 }
