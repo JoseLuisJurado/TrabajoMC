@@ -1,0 +1,14 @@
+*{
+    outline: 1px red dashed;
+}
+
+body{
+
+}
+
+aside{
+    border-radius: 5px;
+}
+.seccion {
+    font-weight: 1000;
+}

@@ -5,8 +5,14 @@ const contenido = document.getElementById("content");
 const param_content = document.getElementById("parametros")
 var stored_vars = [];
 var stored_equation = [];
+<<<<<<< HEAD
 var expr0;
 var expr1;
+=======
+var expr0 = 0;
+var expr1 = 0;
+
+>>>>>>> 00975472c4ed5f992f3ce16f98b9119c22252a95
 var iterations = 0;
 var final_iterations = 0;
 var x_min = 0;
@@ -71,10 +77,59 @@ function fixed_points() {
   document.getElementById("fixed_points").innerHTML = string_points;
 }
 
+function norm_2_1_matrix(A){
+  return math.sqrt(Math.pow(A._data[0][0], 2)+Math.pow(A._data[1][0], 2));
+}
+
+// TENEMOS QUE CAMBIAR DE ALGORITMO
+// Eigenvalue algorithm
+// Reference: https://en.wikipedia.org/wiki/Power_iteration
+function power_iteration(A,num_simulations){
+  
+  // Ideally choose a random vector
+  // To decrease the chance that our vector
+  // Is orthogonal to the eigenvector
+
+  var b_k = math.random([A.size()[1],1])
+
+  while(num_simulations > 0){
+
+    // calculate the matrix-by-vector product Ab
+    var b_k1 = math.multiply(A, b_k)
+
+    // calculate the norm
+    b_k1_norm = norm_2_1_matrix(b_k1);
+
+    // re normalize the vector
+    b_k = math.divide(b_k1, b_k1_norm)
+
+    num_simulations = num_simulations -1;
+  }
+
+  return b_k
+}
+
 function points_stability(){
+<<<<<<< HEAD
   var jacobian_matrix = math.matrix([[math.derivative(stored_equation[0],'x'),math.derivative(stored_equation[0],'y')],[math.derivative(stored_equation[1],'x'),math.derivative(stored_equation[1],'y')]]);
   var eigen_values = math.evaluate(jacobian_matrix,{x:3,y:5});
   console.log(eigen_values.toString());
+=======
+  
+  
+  var jacobian_matrix = math.matrix([
+    [math.derivative(stored_equation[0],'x'),
+     math.derivative(stored_equation[0],'y')],
+    [math.derivative(stored_equation[1],'x'),
+     math.derivative(stored_equation[1],'y')]
+    ]);
+  
+  // parser.evaluate("x + y")
+  // console.log(jacobian_matrix.toString())
+  var parser_matrix = math.evaluate(jacobian_matrix.toString(),{x:values["x"],y:values["y"]})
+  var eigenvalues = power_iteration(parser_matrix,10);
+  console.log(eigenvalues)
+>>>>>>> 00975472c4ed5f992f3ce16f98b9119c22252a95
 }
 
 function orbita2dF() {
