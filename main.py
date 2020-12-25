@@ -44,12 +44,26 @@ def load_params():
     print(f,g)
     print(f"n: {n}, m: {m}, x-max: {x_max}, x_min: {x_min}, y_max: {y_max}, y_min: {y_min}, x_0: {x0}, y_0: {y0}")
     puntos_fijos = solve([f==x, g==y], x, y, solution_dict=True)
-    estabilidad_punts = points_stability(f, g)
-    return render_template('index.html', puntos_fijos=puntos_fijos)
+    print(puntos_fijos)
+    estabilidad_puntos = points_stability(f, g, puntos_fijos)
+    return render_template('index.html', puntos_fijos=puntos_fijos, estabilidad_puntos=estabilidad_puntos)
 
-def points_stability(f, g):
+def points_stability(f, g, puntos_fijos):
     estabilidad_puntos = list()
-    print(vector([f,g]))
+    vec = vector([f,g])
+    fx=vec.diff(x)
+    fy=vec.diff(y)
+    Df=matrix([fx, fy]).transpose()
+
+    for point in puntos_fijos:
+        autovalores_p1=Df(x=point[x],y=point[y]).eigenvalues()
+        if autovalores_p1[0] > 1 and autovalores_p1[1] > 1:
+            estabilidad_puntos.append((point,"punto repulsivo."))
+        elif (autovalores_p1[0] > 1 and autovalores_p1[1] < 1) or (autovalores_p1[0] < 1 and autovalores_p1[1] > 1):
+            estabilidad_puntos.append((point,"punto de silla."))
+        elif autovalores_p1[0] < 1 and autovalores_p1[1] < 1:
+            estabilidad_puntos.append((point,"punto atractivo."))
+
     return estabilidad_puntos
 
 
