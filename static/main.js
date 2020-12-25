@@ -8,10 +8,6 @@ var expr0;
 var expr1;
 var iterations = 0;
 var final_iterations = 0;
-var x_min = 0;
-var x_max = 10;
-var y_min = 0;
-var y_max = 10;
 var values = {}
 var go_button = document.body;
 var points = [];
@@ -40,14 +36,10 @@ function grab_vars() {
     expr1 = math.parse(stored_equation[1])
     iterations = document.getElementById("n").value;
     final_iterations = document.getElementById("m").value;
-    x_min = parseFloat(document.getElementById("x-min").value);
-    x_max = parseFloat(document.getElementById("x-max").value);
-    y_min = parseFloat(document.getElementById("y-min").value);
-    y_max = parseFloat(document.getElementById("y-max").value);
     values[String("x")] = document.getElementById("x0").value;
     values["y"] = document.getElementById("y0").value;
     go_button = document.getElementById("go_button");
-  } catch (err) {}
+  } catch (err) { }
 }
 
 function orbita2dF() {
@@ -61,26 +53,40 @@ function orbita2dF() {
   var x_cal = expr0.evaluate(values);
   var y_cal = expr1.evaluate(values);
 
-  itMap["x"] = x_cal;xs.push(x_cal);
-  itMap["y"] = y_cal;ys.push(y_cal);
+  itMap["x"] = x_cal; xs.push(x_cal);
+  itMap["y"] = y_cal; ys.push(y_cal);
 
-  if (final_iterations != 0){
-    n = final_iterations-iterations;
-  } else{
-    n = iterations;
-  }
+  var n = iterations
+  var m = final_iterations
+  if (m < 0) {
+    alert("Las iteraciones finales (m) no pueden ser menores negativas.")
+  } else if (m == 0) {
+    for (let i = 0; i < n; i++) {
+      x_cal = expr0.evaluate(itMap);
+      y_cal = expr1.evaluate(itMap);
+      itMap["x"] = x_cal;
+      itMap["y"] = y_cal;
+      xs.push(x_cal);
+      ys.push(y_cal);
 
-  for (let i = 0; i < n; i++) {
-
-    x_cal = expr0.evaluate(itMap);
-    y_cal = expr1.evaluate(itMap);
-    itMap["x"] = x_cal;xs.push(x_cal);
-    itMap["y"] = y_cal;ys.push(y_cal);
-    
+    }
+  } else {
+    m += n;
+    for (let i = 0; i < m; i++) {
+      x_cal = expr0.evaluate(itMap);
+      y_cal = expr1.evaluate(itMap);
+      itMap["x"] = x_cal;
+      itMap["y"] = y_cal;
+      if (i > n) {
+        xs.push(x_cal);
+        ys.push(y_cal);
+      }
+    }
   }
 
   return [xs, ys];
 }
+
 
 function plot() {
   // evaluate the expression repeatedly for different values of x and y
@@ -103,11 +109,11 @@ function plot2() {
   const trace1 = {
     x: orbit[0],
     y: orbit[1],
-    mode:'markers',
+    mode: 'markers',
     type: "scatter",
-    marker:{size:10 }
+    marker: { size: 10 }
   };
-  
+
   const layout = {
     // xaxis: {
     //   range: [x_min,x_max]
@@ -115,7 +121,7 @@ function plot2() {
     // yaxis: {
     //   range: [y_min,y_max]
     // },
-    title:'Representación de los atractores'
+    title: 'Representación de los atractores'
   };
 
   const data = [trace1];

@@ -15,10 +15,6 @@ print("Se inicia la aplicación")
 p = Parser(make_var = var)
 n = None 
 m = None 
-x_max = None
-x_min = None
-y_max = None
-y_min = None
 x0 = None
 y0 = None
 f = None
@@ -29,7 +25,11 @@ def init():
     funciones = "1.2-x^2+0.4*y,x".split(',')
     f = p.parse(funciones[0])
     g = p.parse(funciones[1])
-    return render_template("index.html", f=f, g=g)
+    n = 100
+    m = 0
+    x0 = 0.
+    y0 = 1.
+    return render_template("index.html", f=f, g=g, n=n, m=m, x0=x0, y0=y0)
 
 @app.route('/', methods=["POST"])
 def load_params():
@@ -38,18 +38,13 @@ def load_params():
     g = p.parse(funciones[1])
     n = int(request.form["n"])
     m = int(request.form["m"])
-    x_max = int(request.form["x-max"])
-    x_min = int(request.form["x-min"])
-    y_max = int(request.form["y-max"])
-    y_min = int(request.form["y-min"])
     x0 = float(request.form["x0"])
     y0 = float(request.form["y0"])
     print(f,g)
-    print(f"n: {n}, m: {m}, x-max: {x_max}, x_min: {x_min}, y_max: {y_max}, y_min: {y_min}, x_0: {x0}, y_0: {y0}")
     puntos_fijos = solve([f==x, g==y], x, y, solution_dict=True)
     print(puntos_fijos)
     estabilidad_puntos = points_stability(f, g, puntos_fijos)
-    return render_template('index.html', puntos_fijos=puntos_fijos, estabilidad_puntos=estabilidad_puntos, f=f, g=g)
+    return render_template('index.html', puntos_fijos=puntos_fijos, estabilidad_puntos=estabilidad_puntos, f=f, g=g, n=n, m=m, x0=x0, y0=y0)
 
 def points_stability(f, g, puntos_fijos):
     estabilidad_puntos = list()
