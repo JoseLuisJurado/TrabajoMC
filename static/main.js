@@ -35,7 +35,7 @@ function init() {
   go_button.addEventListener("click", function () {
     grab_vars();
     plot();
-    fixed_points();
+    //fixed_points();
     points_stability();
   });
 }
