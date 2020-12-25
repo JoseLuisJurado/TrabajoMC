@@ -3,6 +3,7 @@ from sage.all import *
 from sage.misc.parser import Parser
 import os
 
+
 file_dir = __file__[:-7]
 if file_dir:
     os.chdir(file_dir)
