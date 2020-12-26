@@ -9,6 +9,10 @@ if file_dir:
     os.chdir(file_dir)
 else:
     file_dir = "./"
+
+if os.path.exists("python3.stackdump"):
+    os.remove("python3.stackdump")
+    
 app = Flask(__name__, template_folder="templates")
 print("Se inicia la aplicación")
 
