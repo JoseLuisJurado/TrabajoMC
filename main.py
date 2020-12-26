@@ -33,7 +33,8 @@ def init():
     m = 0
     x0 = 0.
     y0 = 1.
-    return render_template("index.html", f=f, g=g, n=n, m=m, x0=x0, y0=y0)
+    exp_l = ["",""]
+    return render_template("index.html", f=f, g=g, n=n, m=m, x0=x0, y0=y0, exponentes_lyapunov = exp_l)
 
 @app.route('/', methods=["POST"])
 def load_params():
@@ -51,7 +52,7 @@ def load_params():
     print(puntos_fijos)
     estabilidad_puntos = points_stability(f, g, puntos_fijos)
     j = jacobian([f,g], [x,y])
-    exp_l = lyapunov_exp(f,g)
+    exp_l = lyapunov_exp(f,g, x0, y0)
     return render_template('index.html', puntos_fijos=puntos_fijos, estabilidad_puntos=estabilidad_puntos, f=f, g=g, n=n, m=m, x0=x0, y0=y0, j = j, exponentes_lyapunov = exp_l)
 
 def convierte_puntos_fijos(puntos_fijos):
@@ -80,13 +81,13 @@ def points_stability(f,g, puntos_fijos):
 
     return estabilidad_puntos
 
-def lyapunov_exp(f,g):
+def lyapunov_exp(f,g,x0,y0):
     vec = vector([f,g])
     fx = vec.diff(x)
     fy = vec.diff(y)
     A = matrix([fx,fy])
     A_t = A.transpose()
-    return (A*A_t).eigenvalues()
+    return (A*A_t)(x=x0,y=y0).eigenvalues()
     
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port = 5500)

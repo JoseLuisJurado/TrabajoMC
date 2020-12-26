@@ -104,7 +104,7 @@ function plot() {
   };
 
   const layout = {
-    title: 'Representación de los atractores'
+    title: 'Representación de orbita'
   };
 
   const data = [trace1];
@@ -123,7 +123,7 @@ function plot2() {
   };
 
   const layout = {
-    title: 'Representación de los atractores 2'
+    title: 'Representación de los atractores'
   };
 
   const data = [trace1];

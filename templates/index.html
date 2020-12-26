@@ -24,8 +24,8 @@
 
 <body onload="init()">
   <!-- <body> -->
-  <header class="align-items-center container-lg mx p-3 text-center">
-    <img src="imagenes\índice.png" alt="Universidad de Sevilla">
+  <header class="align-items-center container-lg mx p-2 text-center">
+    <img class = "img-fluid" src="{{url_for('static', filename='logo-ETSII-US-Horizontal-Color.png')}}" alt="Universidad de Sevilla">
     <h1>Representación de sistemas discretos bidimensionales</h1>
   </header>
   <div class="container-fluid">
@@ -54,14 +54,14 @@
 
       <main id="content" class="col px-0 flex-grow-1">
         <div class="container-fluid">
-          <div class="p-3">
+          <div class="px-3">
             <div id="input_data" class="row justify-content-between container p-3">
               <div class="row col-7 p-2">
                 <label for="eq">Introduce la ecuación</label>
                  <input text="text" id="eq" name="eq" value="{{f}} , {{g}}" placeholder="f1(x,y),f2(x,y)" /> 
               </div>
 
-              <div class="col-5 justify-content-end mt-4">
+              <div class="col-5 d-flex justify-content-end mt-4">
                 <input class="btn btn-primary" id="go_button" type="submit" value="Go!" />
               </div>
             </div>
@@ -69,16 +69,17 @@
 
           <div class="row min-vh-80 flex-column flex-md-row mt-2 container-fluid plots">
             <main class="col px-0 flex-grow-1">
-              <div class="flex-grow-1 p-3">
+              <div class="flex-grow-1 p-3 border rounded bg-info">
                 <p>
                   Para estudiar los atractores de un mapa bidimensional usamos dos gráficos vistos en la Práctica 5.
                   Estos gráficos nos muestran las cuencas de atracción con opciones de ajustar la cantidad de valores calculados y
                   de iteraciones finales.
                 </p>
                 <div id="plot" class="flex-grow-2"></div>
+                <div class="py-2">
+                  <div id="plot2" class="flex-grow-2"></div>
+                </div>
               </div>
-              <div class="mt-5 flex-grow-1 p-3">
-                <div id="plot2" class="flex-grow-2"></div>
               </div>
             </main>
 
@@ -106,11 +107,10 @@
                 </ul>
               </div>
               <div class="row p-2">
-                <label class="align-top col-md">Datos de Lyapunov</label>
+                <label class="align-top col-md">Exponentes de Lyapunov</label>
                 <ul class="col-sm-8">
-                  {% for exponente in exponentes_lyapunov%}
-                  <li>{{exponente}}</li>
-                  {% endfor %}
+                  <li>L<sub>1</sub>: {{exponentes_lyapunov[0]}}</li>
+                  <li>L<sub>2</sub>: {{exponentes_lyapunov[1]}}</li>
                 </ul>
               </div>
             </aside>
