@@ -33,20 +33,20 @@
         <div class="seccion">Valores</div>
         <div class="row p-2">
           <label class="col-md" for="vars">Iteraciones (n)</label>
-          <input class="col-sm-4" style="text-align: right" type="text" id="n" name="n" value="{{n}}" />
+          <input class="col-sm-4" style="text-align: right" type="number" id="n" name="n" value="{{n}}" />
         </div>
         <div class="row p-2">
           <label class="col-md" for="vars">Iteraciones finales (0 si no hay final)</label>
-          <input class="col-sm-4" style="text-align: right" type="text" id="m" name="m" value="{{m}}" />
+          <input class="col-sm-4" style="text-align: right" type="number" id="m" name="m" value="{{m}}" />
         </div>
         <div class="seccion">Parámetros</div>
         <div class="row p-2">
           <label class="col-md" for="vars">X<sub>0</sub></label>
-          <input class="col-sm-4" style="text-align: right" type="text" id="x0" name="x0" value="{{x0}}" />
+          <input class="col-sm-4" style="text-align: right" type="number" id="x0" name="x0" value="{{x0}}" />
         </div>
         <div class="row p-2">
           <label class="col-md" for="vars">Y<sub>0</sub></label>
-          <input class="col-sm-4" style="text-align: right" type="text" id="y0" name="y0" value="{{y0}}" />
+          <input class="col-sm-4" style="text-align: right" type="number" id="y0" name="y0" value="{{y0}}" />
         </div>
 
       </aside>
@@ -69,7 +69,6 @@
           <div class="row min-vh-80 flex-column flex-md-row mt-2 container-fluid">
             <main class="col px-0 flex-grow-1">
               <div class="flex-grow-1 p-3">
-                <label>Visualización de las orbitas de f(x,y)</label>
                 <div id="plot" class="flex-grow-2"></div>
               </div>
               <div class="mt-5 flex-grow-1 p-3">
