@@ -36,6 +36,7 @@ def load_params():
     funciones = request.form['eq'].split(',')
     f = p.parse(funciones[0])
     g = p.parse(funciones[1])
+    vec = vector([f,g])
     n = int(request.form["n"])
     m = int(request.form["m"])
     x0 = float(request.form["x0"])
@@ -44,9 +45,11 @@ def load_params():
     puntos_fijos = solve([f==x, g==y], x, y, solution_dict=True)
     print(puntos_fijos)
     estabilidad_puntos = points_stability(f, g, puntos_fijos)
-    return render_template('index.html', puntos_fijos=puntos_fijos, estabilidad_puntos=estabilidad_puntos, f=f, g=g, n=n, m=m, x0=x0, y0=y0)
+    j = jacobian([f,g], [x,y])
+    exp_l = lyapunov_exp(f,g)
+    return render_template('index.html', puntos_fijos=puntos_fijos, estabilidad_puntos=estabilidad_puntos, f=f, g=g, n=n, m=m, x0=x0, y0=y0, j = j, exponentes_lyapunov = exp_l)
 
-def points_stability(f, g, puntos_fijos):
+def points_stability(f,g, puntos_fijos):
     estabilidad_puntos = list()
     vec = vector([f,g])
     fx=vec.diff(x)
@@ -64,5 +67,13 @@ def points_stability(f, g, puntos_fijos):
 
     return estabilidad_puntos
 
+def lyapunov_exp(f,g):
+    vec = vector([f,g])
+    fx = vec.diff(x)
+    fy = vec.diff(y)
+    A = matrix([fx,fy])
+    A_t = A.transpose()
+    return (A*A_t).eigenvalues()
+    
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port = 5500)

@@ -94,9 +94,17 @@
                 </ul>
               </div>
               <div class="row p-2">
+                <label class="align-top col-md">Matriz Jacobiana</label>
+                <ul class="col-sm-8">
+                  {{j}}
+                </ul>
+              </div>
+              <div class="row p-2">
                 <label class="align-top col-md">Datos de Lyapunov</label>
                 <ul class="col-sm-8">
-
+                  {% for exponente in exponentes_lyapunov%}
+                  <li>{{exponente}}</li>
+                  {% endfor %}
                 </ul>
               </div>
             </aside>
