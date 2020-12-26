@@ -12,7 +12,7 @@ else:
 
 if os.path.exists("python3.stackdump"):
     os.remove("python3.stackdump")
-    
+
 app = Flask(__name__, template_folder="templates")
 print("Se inicia la aplicación")
 
@@ -50,7 +50,6 @@ def load_params():
     puntos_fijos = convierte_puntos_fijos(puntos_fijos)
     print(puntos_fijos)
     estabilidad_puntos = points_stability(f, g, puntos_fijos)
-    j = jacobian([f,g], [x,y])
     exp_l = lyapunov_exp(f,g)
     return render_template('index.html', puntos_fijos=puntos_fijos, estabilidad_puntos=estabilidad_puntos, f=f, g=g, n=n, m=m, x0=x0, y0=y0, j = j, exponentes_lyapunov = exp_l)
 
