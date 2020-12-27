@@ -61,7 +61,7 @@ function orbita2dF() {
     alert("Las iteraciones finales (m) no pueden ser menores negativas.")
   } else if (m == 0) {
 
-    for (let i = 0; i < n+1; i++) {
+    for (let i = 0; i < n + 1; i++) {
       x_cal = expr0.evaluate(itMap);
       y_cal = expr1.evaluate(itMap);
       itMap["x"] = x_cal;
@@ -70,17 +70,17 @@ function orbita2dF() {
       ys.push(y_cal);
 
     }
-  } else if(m > 0) {
-    
+  } else if (m > 0) {
+
     m += n;
-    
-    for (let i = 0; i < m+1; i++) {
+
+    for (let i = 0; i < m + 1; i++) {
 
       x_cal = expr0.evaluate(itMap);
       y_cal = expr1.evaluate(itMap);
       itMap["x"] = x_cal;
       itMap["y"] = y_cal;
-      
+
       if (i > n) {
         xs.push(x_cal);
         ys.push(y_cal);
@@ -130,3 +130,4 @@ function plot2() {
   Plotly.newPlot("plot2", data, layout);
 
 }
+

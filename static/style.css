@@ -1,6 +1,4 @@
-*{
-    outline: 1px red dashed;
-}
+
 
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
@@ -22,5 +20,5 @@ aside{
 }
 
 .plots{
-  background-color: bisque;
+  background-color: rgb(196, 196, 196);
 }
