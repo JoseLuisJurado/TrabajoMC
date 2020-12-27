@@ -36,25 +36,6 @@ def init():
     exp_l = ["",""]
     return render_template("index.html", f=f, g=g, n=n, m=m, x0=x0, y0=y0, exponentes_lyapunov = exp_l)
 
-# @app.route('/', methods=["POST"])
-# def load_params():
-#     funciones = request.form['eq'].split(',')
-#     f = p.parse(funciones[0])
-#     g = p.parse(funciones[1])
-#     vec = vector([f,g])
-#     n = int(request.form["n"])
-#     m = int(request.form["m"])
-#     x0 = float(request.form["x0"])
-#     y0 = float(request.form["y0"])
-#     print(f,g)
-#     puntos_fijos = solve([f==x, g==y], x, y, solution_dict=True)
-#     puntos_fijos = convierte_puntos_fijos(puntos_fijos)
-#     print(puntos_fijos)
-#     estabilidad_puntos = points_stability(f, g, puntos_fijos)
-#     j = jacobian([f,g], [x,y])
-#     exp_l = lyapunov_exp(f,g, x0, y0)
-#     return render_template('index.html', puntos_fijos=puntos_fijos, estabilidad_puntos=estabilidad_puntos, f=f, g=g, n=n, m=m, x0=x0, y0=y0, j = j, exponentes_lyapunov = exp_l)
-
 @app.route('/output')
 def update_funcs():
     funciones = request.args.get('eq').split(',')
