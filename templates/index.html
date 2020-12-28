@@ -67,7 +67,7 @@
               </div>
 
               <div class="col-5 d-flex justify-content-end mt-4 mb-2">
-                <input class="btn btn-primary" id="go_button" type="button" value="Go!" />
+                <input class="btn btn-primary" id="go_button2" type="button" value="Go!" />
               </div>
             </div>
           </div>
@@ -123,26 +123,21 @@
         </div>
       </aside>
       <script>
-        $("#go_button").click(function () {
-          console.log("Se ha pulsado el boton")
+        $("#go_button2").click(function () {
           var _eq = document.getElementById("eq").value;
-          console.log(_eq)
           var _expr0 = math.parse(stored_equation[0])
           var _expr1 = math.parse(stored_equation[1])
-          console.log(_expr0, _expr1)
           var _iterations = parseFloat(document.getElementById("n").value);
-          console.log(_iterations)
           var _final_iterations = parseFloat(document.getElementById("m").value);
-          console.log(_final_iterations);
           var _x0 = parseFloat(document.getElementById("x0").value);
           var _y0 = parseFloat(document.getElementById("y0").value);
-          console.log(_x0, _y0);
           $.ajax({
             url: "/output",
             type: "get",
             data: { eq: _eq, n: _iterations, m: _final_iterations, x0: _x0, y0: _y0 },
             success: function (response) {
               $("#output").html(response);
+              
             },
             error: function (xhr) {
               console.log("Hubo un error :/")

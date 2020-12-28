@@ -1,14 +1,19 @@
 <div class="row p-2">
     <label class="align-top col-md">Puntos fijos</label>
-    <ul class="col-md-8">
-        {% for punto_fijo in puntos_fijos %}
-        <li>{{ punto_fijo}}</li>
+    <ul id="puntos_fijos" class="col-md-8"  >
+        {% for puntos_fijo in puntos_fijos %}
+        <li><ul>
+            {% for var, value in puntos_fijo.items() %}
+                <li>{{var}}: {{value}}</li>
+                <span></span>
+            {% endfor %}
+        </ul></li>
         {% endfor %}
     </ul>
 </div>
 <div class="row p-2">
     <label class="align-top col-md">Estabilidad</label>
-    <ul class="col-sm-8">
+    <ul id="estabilidad" class="col-sm-8" >
         {% for punto in estabilidad_puntos %}
         <li>El punto {{punto[0]}} tiene estabilidad: {{punto[1]}}</li>
         {% endfor %}
@@ -16,13 +21,13 @@
 </div>
 <div class="row p-2">
     <label class="align-top col-md">Matriz Jacobiana</label>
-    <ul class="col-sm-8">
+    <ul id="m_j" class="col-sm-8" >
         {{j}}
     </ul>
 </div>
 <div class="row p-2">
     <label class="align-top col-md">Exponentes de Lyapunov</label>
-    <ul class="col-sm-8">
+    <ul id="lyap_exp" class="col-sm-8">
         <li>L<sub>1</sub>: {{exponentes_lyapunov[0]}}</li>
         <li>L<sub>2</sub>: {{exponentes_lyapunov[1]}}</li>
     </ul>
