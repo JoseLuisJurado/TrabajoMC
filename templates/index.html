@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistemas Dinamicos Discretos</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename = 'style.css') }}" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/mathjs@8.1.0/lib/browser/math.js"></script>
+  <script src="https://cdn.plot.ly/plotly-1.35.2.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="{{ url_for('static', filename = 'main.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/nerdamer@latest/nerdamer.core.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/nerdamer@latest/Algebra.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/nerdamer@latest/Calculus.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/nerdamer@latest/Solve.js"></script>
+
+</head>
+
+<body onload="init()">
+  <!-- <body> -->
+  <header class="align-items-center container-lg mx p-2 text-center border-bottom py-2">
+    <img class="w-50 img-fluid" src="{{url_for('static', filename='logo-ETSII-US-Horizontal-Color.png')}}"
+      alt="Universidad de Sevilla">
+    <h3>Representación de sistemas discretos bidimensionales</h1>
+  </header>
+  <div class="container-fluid">
+    <form class="row min-vh-100 flex-column flex-md-row" method="POST">
+      <aside class="col-12 col-md-3 col-xl-2 p-0 bg-light px-3 flex-shrink-1 p-2 border">
+        <div class="border-bottom py-2">
+          <div class="seccion">Valores</div>
+          <div class="row p-2">
+            <label class="col-md" for="vars">Iteraciones (n)</label>
+            <input class="col-sm-4" style="text-align: right" type="number" id="n" name="n" value="{{n}}" />
+          </div>
+          <div class="row p-2">
+            <label class="col-md" for="vars">Iteraciones finales (0 si no hay final)</label>
+            <input class="col-sm-4" style="text-align: right" type="number" id="m" name="m" value="{{m}}" />
+          </div>
+        </div>
+        <div class="border-top py-2">
+          <div class="seccion">Parámetros</div>
+          <div class="row p-2">
+            <label class="col-md" for="vars">X<sub>0</sub></label>
+            <input class="col-sm-4" style="text-align: right" type="number" id="x0" name="x0" value="{{x0}}" />
+          </div>
+          <div class="row p-2">
+            <label class="col-md" for="vars">Y<sub>0</sub></label>
+            <input class="col-sm-4" style="text-align: right" type="number" id="y0" name="y0" value="{{y0}}" />
+          </div>
+        </div>
+
+      </aside>
+
+      <main id="content" class="col px-0 flex-grow-1">
+        <div class="container-fluid">
+          <div class="px-3">
+            <div id="input_data" class="row justify-content-between container border rounded bg-light mt-2 p-3">
+              <div class="row col-7 p-2">
+                <label for="eq">Introduce la ecuación</label>
+                <input text="text" id="eq" name="eq" value="{{f}} , {{g}}" placeholder="f1(x,y),f2(x,y)" />
+              </div>
+
+              <div class="col-5 d-flex justify-content-end mt-4 mb-2">
+                <input class="btn btn-primary" id="go_button" type="button" value="Go!" />
+              </div>
+            </div>
+          </div>
+
+          <div class="row min-vh-80 flex-column flex-md-row mt-2 border rounded container-fluid plots">
+            <main class="col px-0 flex-grow-1">
+              <div class="flex-grow-1 p-3">
+                <p>
+                  Para estudiar los atractores de un mapa bidimensional usamos dos gráficos vistos en la Práctica 5.
+                  Estos gráficos nos muestran las cuencas de atracción con opciones de ajustar la cantidad de valores
+                  calculados y
+                  de iteraciones finales.
+                </p>
+                <div id="plot" class="flex-grow-2"></div>
+                <div class="py-2">
+                  <div id="plot2" class="flex-grow-2"></div>
+                </div>
+              </div>
+          </div>
+      </main>
+
+      <aside class="col-12 col-md-5 col-xl-3 p-2 border">
+        <div id="output">
+          <div class="row p-2">
+            <label class="align-top col-md">Puntos fijos</label>
+            <ul class="col-md-8">
+              {% for fixed_point in fixed_points %}
+              <li>{{fixed_point}}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          <div class="row p-2">
+            <label class="align-top col-md">Estabilidad</label>
+            <ul class="col-sm-8">
+              {% for point in stability %}
+              <li>El punto ({{point[0][0]}},{{point[0][1]}}) tiene estabilidad: {{point[1]}}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          <div class="row p-2">
+            <label class="align-top col-md">Matriz Jacobiana</label>
+            <ul class="col-sm-8">
+              {{j}}
+            </ul>
+          </div>
+          <div class="row p-2">
+            <label class="align-top col-md">Exponentes de Lyapunov</label>
+            <ul class="col-sm-8">
+              <li>L<sub>1</sub>: {{exp_l[0]}}</li>
+              <li>L<sub>2</sub>: {{exp_l[1]}}</li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+      <script>
+        $("#go_button").click(function () {
+          var _eq = document.getElementById("eq").value;
+          var _expr0 = math.parse(stored_equation[0])
+          var _expr1 = math.parse(stored_equation[1])
+          var _iterations = parseFloat(document.getElementById("n").value);
+          var _final_iterations = parseFloat(document.getElementById("m").value);
+          var _x0 = parseFloat(document.getElementById("x0").value);
+          var _y0 = parseFloat(document.getElementById("y0").value);
+          $.ajax({
+            url: "/output",
+            type: "get",
+            data: { eq: _eq, n: _iterations, m: _final_iterations, x0: _x0, y0: _y0 },
+            success: function (response) {
+              $("#output").html(response);
+            },
+            error: function (xhr) {
+              console.log("Hubo un error :/")
+              console.log(xhr)
+            }
+          });
+        });
+      </script>
+  </div>
+  </div>
+  </main>
+  </form>
+  </div>
+</body>
+
+</html>
