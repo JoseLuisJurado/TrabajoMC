@@ -67,7 +67,7 @@
               </div>
 
               <div class="col-5 d-flex justify-content-end mt-4 mb-2">
-                <input class="btn btn-primary" id="go_button2" type="button" value="Go!" />
+                <input class="btn btn-primary" id="go_button" type="button" value="Go!" />
               </div>
             </div>
           </div>
@@ -94,16 +94,16 @@
           <div class="row p-2">
             <label class="align-top col-md">Puntos fijos</label>
             <ul class="col-md-8">
-              {% for punto_fijo in puntos_fijos %}
-              <li>{{ punto_fijo}}</li>
+              {% for fixed_point in fixed_points %}
+              <li>{{fixed_point}}</li>
               {% endfor %}
             </ul>
           </div>
           <div class="row p-2">
             <label class="align-top col-md">Estabilidad</label>
             <ul class="col-sm-8">
-              {% for punto in estabilidad_puntos %}
-              <li>El punto {{punto[0]}} tiene estabilidad: {{punto[1]}}</li>
+              {% for point in stability %}
+              <li>El punto ({{point[0][0]}},{{point[0][1]}}) tiene estabilidad: {{point[1]}}</li>
               {% endfor %}
             </ul>
           </div>
@@ -116,14 +116,14 @@
           <div class="row p-2">
             <label class="align-top col-md">Exponentes de Lyapunov</label>
             <ul class="col-sm-8">
-              <li>L<sub>1</sub>: {{exponentes_lyapunov[0]}}</li>
-              <li>L<sub>2</sub>: {{exponentes_lyapunov[1]}}</li>
+              <li>L<sub>1</sub>: {{exp_l[0]}}</li>
+              <li>L<sub>2</sub>: {{exp_l[1]}}</li>
             </ul>
           </div>
         </div>
       </aside>
       <script>
-        $("#go_button2").click(function () {
+        $("#go_button").click(function () {
           var _eq = document.getElementById("eq").value;
           var _expr0 = math.parse(stored_equation[0])
           var _expr1 = math.parse(stored_equation[1])
@@ -137,7 +137,6 @@
             data: { eq: _eq, n: _iterations, m: _final_iterations, x0: _x0, y0: _y0 },
             success: function (response) {
               $("#output").html(response);
-              
             },
             error: function (xhr) {
               console.log("Hubo un error :/")
