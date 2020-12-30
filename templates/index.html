@@ -125,8 +125,8 @@
       <script>
         $("#go_button").click(function () {
           var _eq = document.getElementById("eq").value;
-          var _expr0 = math.parse(stored_equation[0])
-          var _expr1 = math.parse(stored_equation[1])
+          var _expr0 = math.parse(stored_equation[0].replace('**', '^'))
+          var _expr1 = math.parse(stored_equation[1].replace('**', '^'))
           var _iterations = parseFloat(document.getElementById("n").value);
           var _final_iterations = parseFloat(document.getElementById("m").value);
           var _x0 = parseFloat(document.getElementById("x0").value);

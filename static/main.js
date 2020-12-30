@@ -32,8 +32,8 @@ function init() {
 function grab_vars() {
   try {
     stored_equation = document.getElementById("eq").value.split(",");
-    expr0 = math.parse(stored_equation[0])
-    expr1 = math.parse(stored_equation[1])
+    expr0 = math.parse(stored_equation[0].replace('**', '^'))
+    expr1 = math.parse(stored_equation[1].replace('**', '^'))
     iterations = parseFloat(document.getElementById("n").value);
     final_iterations = parseFloat(document.getElementById("m").value);
     values[String("x")] = parseFloat(document.getElementById("x0").value);

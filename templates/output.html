@@ -3,10 +3,8 @@
     <ul id="fixed_points" class="col-md-8"  >
         {% for fixed_point in fixed_points %}
         <li><ul>
-            {% for var, value in fixed_point.items() %}
-                <li>{{var}}: {{value}}</li>
-                <span></span>
-            {% endfor %}
+            <li>x: {{fixed_point[0]}}</li>
+            <li>y: {{fixed_point[1]}}</li>
         </ul></li>
         {% endfor %}
     </ul>
@@ -15,7 +13,7 @@
     <label class="align-top col-md">Estabilidad</label>
     <ul id="estabilidad" class="col-sm-8" >
         {% for point in stability %}
-        <li>El punto {{point}} tiene estabilidad: {{point[1]}}</li>
+        <li>El punto {{point[0]}} tiene estabilidad: {{point[1]}}</li>
         {% endfor %}
     </ul>
 </div>

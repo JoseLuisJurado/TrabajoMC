@@ -1,8 +1,7 @@
-from flask import Flask, render_template, request
-from sage.all import *
-from sage.misc.reset import EXCLUDE
-from sage.misc.parser import Parser
+from flask import Flask, render_template, make_response, request
+from sympy import *
 import os
+
 
 file_dir = __file__[:-7]
 if file_dir:
@@ -18,10 +17,11 @@ if os.path.exists("python3.stackdump"):
     os.remove("python3.stackdump")
     
 app = Flask(__name__, template_folder="templates")
-app.config["CACHE_TYPE"] = "null"
+
 print("Se inicia la aplicación")
 
-p = Parser(make_var = var)
+
+x,y = symbols('x y')
 n = None 
 m = None 
 x0 = None
@@ -36,8 +36,8 @@ def init():
     Carga una serie de valores por defecto que introduce en la página en su inicio.
     '''
     eq = "1.2-x^2+0.4*y,x".split(',')
-    f = p.parse(eq[0])
-    g = p.parse(eq[1])
+    f = sympify(eq[0].replace('^', '**'))
+    g = sympify(eq[1].replace('^', '**'))
     n = 100
     m = 0
     x0 = 0.
@@ -86,11 +86,9 @@ def update_funcs():
     '''
     Se detalla paso por paso el funcionamiento de la siguiente función
     '''
-    reset_cache() # Usamos esta función para reiniciar el valor de todas las variables, en un intento de liberar la memoria
     eq = request.args.get('eq').split(',') # Almacenamos las funciones, que parseamos el las siguientes lineas
-    f = p.parse(eq[0])
-    g = p.parse(eq[1])
-    vec = vector([f,g])
+    f = sympify(eq[0].replace('^', '**'))
+    g = sympify(eq[1].replace('^', '**'))
     
     #Recogemos las variables necesarias para la ejecución del estudio del mapa
     n = int(request.args.get("n"))
@@ -102,15 +100,15 @@ def update_funcs():
     print(f"funciones:{f,g}")
 
     #Calculamos los puntos fijos resolviendo las ecuaciones del mapa
-    fixed_points = solve([f==x, g==y], x, y, solution_dict=True)
-    fixed_points = to_numerical(fixed_points)
+    fixed_points = nonlinsolve([Eq(f,x), Eq(g,y)], (x,y))
+    #fixed_points = to_numerical(fixed_points)
     print(f"puntos fijos:{fixed_points}")
 
-    #Calculamos la estabilidad de los puntos fijos mediante la funcion estabilidad
+    # #Calculamos la estabilidad de los puntos fijos mediante la funcion estabilidad
     stability = points_stability(f, g, fixed_points)
     print(f"estabilidad: {stability}")
 
-    j = jacobian([f,g], [x,y])
+    j = Matrix([f,g]).jacobian(Matrix([x,y]))
     print(f"Jacobiana:{j}")
 
     exp_l = lyapunov_exp(f,g, x0, y0)
@@ -118,26 +116,19 @@ def update_funcs():
 
     return render_template('output.html', fixed_points=fixed_points, stability = stability, j = j, exp_l = exp_l)
 
-def to_numerical(fixed_points):
-    res = list()
-    for points in fixed_points:
-        points[x] = points[x].n()
-        points[y] = points[y].n()
-        res.append(points)
-    return res
 
 def points_stability(f,g, fixed_points):
     stability = list()
-    vec = vector([f,g])
-    fx=vec.diff(x)
-    fy=vec.diff(y)
-    Df=matrix([fx, fy]).transpose()
+    vec = Matrix([f,g])
+    fx = vec.diff(x)
+    fy = vec.diff(y)
+    Df = Matrix([[fx,fy]]).transpose()
 
     for point in fixed_points:
-        eigen_values=Df(x=point[x],y=point[y]).eigenvalues()
-        if eigen_values[0].imag() != 0:
-            a = eigen_values[0].real()
-            b = eigen_values[0].imag()
+        eigen_values=list(Df.subs({x:point[0],y:point[1]}).eigenvals().keys())
+        if im(eigen_values[0]) != 0:
+            a = re(eigen_values[0])
+            b = im(eigen_values[0])
             r = sqrt((a**2) + (b**2))
             if abs(r) < 1:
                 stability.append((point, "punto atractivo."))
@@ -160,30 +151,13 @@ def points_stability(f,g, fixed_points):
 
 
 def lyapunov_exp(f,g,x0,y0):
-    vec = vector([f,g])
+    vec = Matrix([f,g])
     fx = vec.diff(x)
     fy = vec.diff(y)
-    A = matrix([fx,fy])
+    A = Matrix([[fx,fy]])
     A_t = A.transpose()
-    return (A*A_t)(x=x0,y=y0).eigenvalues()
+    return list((A.multiply_elementwise(A_t)).subs({x:x0,y:y0}).eigenvals().keys())
 
-def reset_cache():
-    EXCLUDE.add('request')
-    EXCLUDE.add('p')
-    EXCLUDE.add('to_numerical')
-    EXCLUDE.add('points_stability')
-    EXCLUDE.add('lyapunov_exp')
-    EXCLUDE.add('render_template')
-    EXCLUDE.add('EXCLUDE')
-    EXCLUDE.add('reset_cache')
-    EXCLUDE.add('gc')
-    EXCLUDE.add("n") 
-    EXCLUDE.add("m") 
-    EXCLUDE.add("x0")
-    EXCLUDE.add("y0")
-    EXCLUDE.add("f")
-    EXCLUDE.add("g")
-    reset()
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port = 5500)
