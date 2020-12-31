@@ -1,7 +1,7 @@
 from flask import Flask, render_template, make_response, request
 from sympy import *
 import os
-
+init_printing()
 
 file_dir = __file__[:-7]
 if file_dir:
@@ -86,9 +86,18 @@ def update_funcs():
     '''
     Se detalla paso por paso el funcionamiento de la siguiente función
     '''
-    eq = request.args.get('eq').split(',') # Almacenamos las funciones, que parseamos el las siguientes lineas
-    f = sympify(eq[0].replace('^', '**'))
-    g = sympify(eq[1].replace('^', '**'))
+    if request.args.get('type') == "eq":
+        eq = request.args.get('input').split(',') # Almacenamos las funciones, que parseamos el las siguientes lineas
+        f = sympify(eq[0].replace('^', '**'))
+        g = sympify(eq[1].replace('^', '**'))
+    else:
+        matrix = Matrix(sympify(request.args.get('input')))
+        print(f"Matrix: {matrix}")
+        matrix = matrix*(Matrix([x,y]))
+        f = matrix.tolist()[0][0]
+        g = matrix.tolist()[1][0]
+
+
     
     #Recogemos las variables necesarias para la ejecución del estudio del mapa
     n = int(request.args.get("n"))
@@ -108,7 +117,7 @@ def update_funcs():
     stability = points_stability(f, g, fixed_points)
     print(f"estabilidad: {stability}")
 
-    j = Matrix([f,g]).jacobian(Matrix([x,y]))
+    j = Matrix([f,g]).jacobian(Matrix([x,y])).tolist()
     print(f"Jacobiana:{j}")
 
     exp_l = lyapunov_exp(f,g, x0, y0)
@@ -156,7 +165,7 @@ def lyapunov_exp(f,g,x0,y0):
     fy = vec.diff(y)
     A = Matrix([[fx,fy]])
     A_t = A.transpose()
-    return list((A.multiply_elementwise(A_t)).subs({x:x0,y:y0}).eigenvals().keys())
+    return list((A*A_t).subs({x:x0,y:y0}).eigenvals().keys())
 
 
 if __name__ == '__main__':

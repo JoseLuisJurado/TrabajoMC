@@ -61,7 +61,18 @@
         <div class="container-fluid">
           <div class="px-3">
             <div id="input_data" class="row justify-content-between container border rounded bg-light mt-2 p-3">
-              <div class="row col-7 p-2">
+              <div class="row px-2">
+                <label class="col-sm-2" for="input_type">Tipo de entrada</label>
+                <div class="col-sm-2">
+                  <label for="matrix_input">Matriz</label>
+                  <input type="radio" id="matrix_input" name="option">
+                </div>
+                <div class="col-sm-2"> <label for="eq_input">Ecuaciones</label>
+                  <input type="radio" id="eq_input" name="option" checked>
+                </div>
+
+              </div>
+              <div id="input_type" class="row col-7 p-2">
                 <label for="eq">Introduce la ecuación</label>
                 <input text="text" id="eq" name="eq" value="{{f}} , {{g}}" placeholder="f1(x,y),f2(x,y)" />
               </div>
@@ -124,7 +135,13 @@
       </aside>
       <script>
         $("#go_button").click(function () {
-          var _eq = document.getElementById("eq").value;
+          if($("#eq_input").is(":checked")){
+            var _input = document.getElementById("eq").value;
+            var _type = "eq"
+          } else{
+            var _input = document.getElementById("matrix").value;
+            var _type = "matrix"
+          }
           var _expr0 = math.parse(stored_equation[0].replace('**', '^'))
           var _expr1 = math.parse(stored_equation[1].replace('**', '^'))
           var _iterations = parseFloat(document.getElementById("n").value);
@@ -134,7 +151,7 @@
           $.ajax({
             url: "/output",
             type: "get",
-            data: { eq: _eq, n: _iterations, m: _final_iterations, x0: _x0, y0: _y0 },
+            data: { input: _input, type: _type, n: _iterations, m: _final_iterations, x0: _x0, y0: _y0 },
             success: function (response) {
               $("#output").html(response);
             },
@@ -144,6 +161,12 @@
             }
           });
         });
+        $("#eq_input").click(function (){
+          $("#input_type").html('<label for="eq">Introduce la ecuación</label><input text="text" id="eq" name="eq" value="{{f}} , {{g}}" placeholder="f1(x,y),f2(x,y)"/>')
+        })
+        $("#matrix_input").click(function (){
+          $("#input_type").html('<label for="matrix">Introduce la matriz</label><input text="text" id="matrix" name="matrix" value="{{A}}" placeholder="Matriz A"/>')
+        })
       </script>
   </div>
   </div>
