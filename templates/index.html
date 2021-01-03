@@ -139,11 +139,14 @@
             var _input = document.getElementById("eq").value;
             var _type = "eq"
           } else{
-            var _input = document.getElementById("matrix").value;
+            var matrix = [[document.getElementById("m_00").value,
+                          document.getElementById("m_01").value],
+                          [document.getElementById("m_10").value,
+                          document.getElementById("m_11").value]]
+            var _input = `[[${matrix[0][0]},${matrix[0][1]}],[${matrix[1][0]},${matrix[1][1]}]]`
+            console.log(_input)
             var _type = "matrix"
           }
-          var _expr0 = math.parse(stored_equation[0].replace('**', '^'))
-          var _expr1 = math.parse(stored_equation[1].replace('**', '^'))
           var _iterations = parseFloat(document.getElementById("n").value);
           var _final_iterations = parseFloat(document.getElementById("m").value);
           var _x0 = parseFloat(document.getElementById("x0").value);
@@ -163,9 +166,20 @@
         });
         $("#eq_input").click(function (){
           $("#input_type").html('<label for="eq">Introduce la ecuación</label><input text="text" id="eq" name="eq" value="{{f}} , {{g}}" placeholder="f1(x,y),f2(x,y)"/>')
+          stored_equation = document.getElementById("eq").value.split(",");
         })
         $("#matrix_input").click(function (){
-          $("#input_type").html('<label for="matrix">Introduce la matriz</label><input text="text" id="matrix" name="matrix" value="{{A}}" placeholder="Matriz A"/>')
+          $("#input_type").html(`<label for="matrix" class="col-sm-4">Introduce la matriz</label>
+          <div class="col-sm-3">
+            {% for i in range(2) %}
+              <div class="row">
+              {% for j in range(2) %}
+                <input class="col-sm-5" text="text" id="m_{{i}}{{j}}" name="matrix" value="{{A[i][j]}}" placeholder="x_{{i}}{{j}}">
+              {% endfor %}
+              </div>
+            {% endfor %}
+          </div>`)
+          store_matrix();
         })
       </script>
   </div>

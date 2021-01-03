@@ -3,6 +3,7 @@
 //Parámetros
 const contenido = document.getElementById("content");
 const param_content = document.getElementById("parametros")
+var matrix;
 var stored_equation = [];
 var expr0;
 var expr1;
@@ -31,12 +32,20 @@ function init() {
 
 function grab_vars() {
   try {
-    stored_equation = document.getElementById("eq").value.split(",");
+    try {
+      stored_equation = document.getElementById("eq").value.split(",");
+    } catch(err) {
+      var matrix = [[document.getElementById("m_00").value,
+                     document.getElementById("m_01").value],
+                    [document.getElementById("m_10").value,
+                     document.getElementById("m_11").value]]
+      stored_equation = `${matrix[0][0]}*x + ${matrix[0][1]}*y, ${matrix[1][0]}*x + ${matrix[1][1]}*y`.split(',')   
+    }
     expr0 = math.parse(stored_equation[0].replace('**', '^'))
     expr1 = math.parse(stored_equation[1].replace('**', '^'))
     iterations = parseFloat(document.getElementById("n").value);
     final_iterations = parseFloat(document.getElementById("m").value);
-    values[String("x")] = parseFloat(document.getElementById("x0").value);
+    values["x"] = parseFloat(document.getElementById("x0").value);
     values["y"] = parseFloat(document.getElementById("y0").value);
     go_button = document.getElementById("go_button");
   } catch (err) { }
@@ -91,6 +100,11 @@ function orbita2dF() {
   return [xs, ys];
 }
 
+
+function store_matrix(){
+  let matrix = $("#matrix").value
+  console.log()
+}
 
 function plot() {
   // evaluate the expression repeatedly for different values of x and y

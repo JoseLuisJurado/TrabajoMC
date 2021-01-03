@@ -36,6 +36,7 @@ def init():
     Carga una serie de valores por defecto que introduce en la página en su inicio.
     '''
     eq = "1.2-x^2+0.4*y,x".split(',')
+    A = [[1,1],[1,2]]
     f = sympify(eq[0].replace('^', '**'))
     g = sympify(eq[1].replace('^', '**'))
     n = 100
@@ -43,7 +44,7 @@ def init():
     x0 = 0.
     y0 = 1.
     exp_l = ["",""]
-    return render_template("index.html", f=f, g=g, n=n, m=m, x0=x0, y0=y0, exp_l = exp_l)
+    return render_template("index.html", f=f, g=g, A=A, n=n, m=m, x0=x0, y0=y0, exp_l = exp_l)
 
 '''
 La siguiente función se encarga de realizar los cambios de igual forma que la dispuesta con el botón Go!, salvo que lo hace 
@@ -91,6 +92,9 @@ def update_funcs():
         f = sympify(eq[0].replace('^', '**'))
         g = sympify(eq[1].replace('^', '**'))
     else:
+        matrix = request.args.get('input')
+        print(matrix)
+        print(type(matrix))
         matrix = Matrix(sympify(request.args.get('input')))
         print(f"Matrix: {matrix}")
         matrix = matrix*(Matrix([x,y]))
