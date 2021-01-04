@@ -2,7 +2,6 @@
 
 //Parámetros
 const contenido = document.getElementById("content");
-const param_content = document.getElementById("parametros")
 var matrix;
 var stored_equation = [];
 var expr0;
@@ -20,14 +19,45 @@ var orbit;
 function init() {
   //const contenido_basico = "\\templates\\contenido_basico.html";
   //print_mode(contenido_basico, contenido);
-  grab_vars()
-  plot();
-  plot2();
-  go_button.addEventListener("click", function () {
+  grab_vars();
+  find_params();
+  plot_orbita();
+  plot_atractor();
+  document.getElementById("eq").onkeyup(find_params())
+  $("#go_button").click(function () {
     grab_vars();
-    plot();
-    plot2();
+    plot_orbita();
+    plot_atractor();
+    if($("#eq_input").is(":checked")){
+      var _input = document.getElementById("eq").value;
+      var _type = "eq"
+    } else{
+      var matrix = [[document.getElementById("m_00").value,
+                    document.getElementById("m_01").value],
+                    [document.getElementById("m_10").value,
+                    document.getElementById("m_11").value]]
+      var _input = `[[${matrix[0][0]},${matrix[0][1]}],[${matrix[1][0]},${matrix[1][1]}]]`
+      var _type = "matrix"
+    }
+    var _iterations = parseFloat(document.getElementById("n").value);
+    var _final_iterations = parseFloat(document.getElementById("m").value);
+    var _x0 = parseFloat(document.getElementById("x0").value);
+    var _y0 = parseFloat(document.getElementById("y0").value);
+    var _values = JSON.stringify(values)
+    $.ajax({
+      url: "/output",
+      type: "get",
+      data: { input: _input, values: _values, type: _type, n: _iterations, m: _final_iterations, x0: _x0, y0: _y0 },
+      success: function (response) {
+        $("#output").html(response);
+      },
+      error: function (xhr) {
+        console.log("Hubo un error :/")
+        console.log(xhr)
+      }
+    });
   });
+  
 }
 
 function grab_vars() {
@@ -51,17 +81,62 @@ function grab_vars() {
   } catch (err) { }
 }
 
-function orbita2dF() {
+function find_params(){
+  let stock = "xXyY";
+  var params = new Set();
+  values = {}
+  values["x"] = parseFloat(document.getElementById("x0").value);
+  values["y"] = parseFloat(document.getElementById("y0").value);
+  stored_equation = document.getElementById('eq').value.split(",");
+  try{
+    expr0 = math.parse(stored_equation[0].replace('**', '^'))
+    expr0.traverse(function (node, path, parent) {
+      switch (node.type) {
+        case 'SymbolNode':
+          if (!stock.includes(node.name)){
+            params.add(node.name);
+            values[node.name] = 0
+          }
+          break
+        default:
+          break;
+      }
+    })
+  } catch (err) {}
+  
+  try{
+    expr1 = math.parse(stored_equation[1].replace('**', '^'))
+    expr1.traverse(function (node, path, parent) {
+      switch (node.type) {
+        case 'SymbolNode':
+          if (!stock.includes(node.name)){
+            params.add(node.name);
+            values[node.name] = 0
+          }
+          break
+        default:
+          console.log(node.type);
+          break;
+      }
+    })
+  } catch (err) {}
+  
+  var params_html = ""
+  params.forEach(function (param){
+    params_html += `<div class="row p-2">
+                  <label class="col-md" for="${param}">${param}</label>
+                  <input class="col-sm-4" style="text-align: right" type="number" onchange="values[this.id]=parseFloat(this.value)" id="${param}" name="${param}" value="0.0" />
+                  </div>`
+  })
+  document.getElementById("params").innerHTML = params_html
+
+}
+function orbita() {
   // take expresion and compile in mathjs
-  var x0 = values["x"]
-  var y0 = values["y"]
   var xs = [];
   var ys = [];
 
   var itMap = Object.assign({}, values);
-
-  itMap["x"] = x0;
-  itMap["y"] = y0;
 
   var n = iterations
   var m = final_iterations
@@ -101,14 +176,9 @@ function orbita2dF() {
 }
 
 
-function store_matrix(){
-  let matrix = $("#matrix").value
-  console.log()
-}
-
-function plot() {
+function plot_orbita() {
   // evaluate the expression repeatedly for different values of x and y
-  orbit = orbita2dF();
+  orbit = orbita();
 
   // render the plot using plotly
   const trace1 = {
@@ -122,10 +192,10 @@ function plot() {
   };
 
   const data = [trace1];
-  Plotly.newPlot("plot", data, layout);
+  Plotly.newPlot("plot_orb", data, layout);
 }
 
-function plot2() {
+function plot_atractor() {
 
   // render the plot using plotly
   const trace1 = {
@@ -141,7 +211,7 @@ function plot2() {
   };
 
   const data = [trace1];
-  Plotly.newPlot("plot2", data, layout);
+  Plotly.newPlot("plot_att", data, layout);
 
 }
 

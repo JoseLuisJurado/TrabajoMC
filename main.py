@@ -1,6 +1,7 @@
 from flask import Flask, render_template, make_response, request
 from sympy import *
 import os
+import json
 init_printing()
 
 file_dir = __file__[:-7]
@@ -35,7 +36,7 @@ def init():
     La siguiente función se encarga de iniciar la página.
     Carga una serie de valores por defecto que introduce en la página en su inicio.
     '''
-    eq = "1.2-x^2+0.4*y,x".split(',')
+    eq = "a -x^2 + b*y + 1.2,x".split(',')
     A = [[1,1],[1,2]]
     f = sympify(eq[0].replace('^', '**'))
     g = sympify(eq[1].replace('^', '**'))
@@ -46,41 +47,6 @@ def init():
     exp_l = ["",""]
     return render_template("index.html", f=f, g=g, A=A, n=n, m=m, x0=x0, y0=y0, exp_l = exp_l)
 
-'''
-La siguiente función se encarga de realizar los cambios de igual forma que la dispuesta con el botón Go!, salvo que lo hace 
-mediante una peticion HTTP-POST, recibiendo de vuelta el HTML con los datos procesados,en lugar de un GET con estos mismos datos
-'''
-# @app.route('/', methods=["POST"])
-# def update_funcs():
-#     reset_cache()
-#     funciones = request.form['eq'].split(',')
-#     f = p.parse(funciones[0])
-#     g = p.parse(funciones[1])
-#     vec = vector([f,g])
-#     n = int(request.form['n'])
-#     m = int(request.form['m'])
-#     x0 = float(request.form['x0'])
-#     y0 = float(request.form['y0'])
-
-#     print(f"funciones:{f,g}")
-
-#     puntos_fijos = solve([f==x, g==y], x, y, solution_dict=True)
-#     puntos_fijos = convierte_puntos_fijos(puntos_fijos)
-#     print(get_memory_usage())
-#     gc.collect()
-#     print(f"puntos fijos:{puntos_fijos}")
-
-#     estabilidad_puntos = points_stability(f, g, puntos_fijos)
-#     print(f"estabilidad: {estabilidad_puntos}")
-
-#     j = jacobian([f,g], [x,y])
-#     print(f"Jacobiana:{j}")
-
-#     exp_l = lyapunov_exp(f,g, x0, y0)
-#     print(f"Exponentes de Lyapunov {exp_l}")
-
-#     return render_template('index.html', f=f, g=g, n=n, m=m, x0=x0, y0=y0, exponentes_lyapunov = exp_l, puntos_fijos=puntos_fijos, estabilidad_puntos=estabilidad_puntos, j = j)
-
 
 @app.route('/output')
 def update_funcs():
@@ -89,8 +55,12 @@ def update_funcs():
     '''
     if request.args.get('type') == "eq":
         eq = request.args.get('input').split(',') # Almacenamos las funciones, que parseamos el las siguientes lineas
-        f = sympify(eq[0].replace('^', '**'))
-        g = sympify(eq[1].replace('^', '**'))
+        values = json.loads(request.args.get('values'))
+        print(f"Valores pasados: {values}")
+        values.pop("x")
+        values.pop("y")
+        f = sympify(eq[0].replace('^', '**')).subs(values)
+        g = sympify(eq[1].replace('^', '**')).subs(values)
     else:
         matrix = request.args.get('input')
         print(matrix)
