@@ -71,13 +71,14 @@
                   <input type="radio" id="matrix_input" name="option">
                 </div>
                 <div class="col-sm-2"> <label for="eq_input">Ecuaciones</label>
-                  <input type="radio"  id="eq_input" name="option" checked>
+                  <input type="radio" id="eq_input" name="option" checked>
                 </div>
 
               </div>
               <div id="input_type" class="row col-7 p-2">
                 <label for="eq">Introduce la ecuación</label>
-                <input text="text" id="eq" class="py-1" name="eq" onkeyup="find_params()" value="{{f}} , {{g}}" placeholder="f1(x,y),f2(x,y)" />
+                <input text="text" id="eq" class="py-1" name="eq" onkeyup="find_params()" value="{{f}} , {{g}}"
+                  placeholder="f1(x,y),f2(x,y)" />
               </div>
 
               <div class="col-5 d-flex justify-content-end mt-4 mb-2">
@@ -128,6 +129,14 @@
             </ul>
           </div>
           <div class="row p-2">
+            <label class="align-top col-md">Autovalores</label>
+            <ul id="eigen_vals" class="col-sm-8">
+              {% for i in range(eigen_values|length) %}
+              <li>&lambda;<sub>i</sub>: {{eigen_values[i]}}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          <div class="row p-2">
             <label class="align-top col-md">Exponentes de Lyapunov</label>
             <ul class="col-sm-8">
               <li>L<sub>1</sub>: {{exp_l[0]}}</li>
@@ -137,11 +146,11 @@
         </div>
       </aside>
       <script>
-        $("#eq_input").click(function (){
+        $("#eq_input").click(function () {
           $("#input_type").html('<label for="eq">Introduce la ecuación</label><input text="text" class="py-1" id="eq" name="eq" onkeyup="find_params()" value="{{f}} , {{g}}" placeholder="f1(x,y),f2(x,y)"/>')
           stored_equation = document.getElementById("eq").value.split(",");
         })
-        $("#matrix_input").click(function (){
+        $("#matrix_input").click(function () {
           $("#input_type").html(`<label for="matrix" class="col-sm-4">Introduce la matriz</label>
           <div class="col-sm-3">
             {% for i in range(2) %}

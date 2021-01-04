@@ -94,10 +94,12 @@ def update_funcs():
     j = Matrix([f,g]).jacobian(Matrix([x,y])).tolist()
     print(f"Jacobiana:{j}")
 
+    eigen_values = list(Matrix([f,g]).jacobian(Matrix([x,y])).eigenvals().keys())
+    print(f"Autovalores: {eigen_values}")
     exp_l = lyapunov_exp(f,g, x0, y0)
     print(f"Exponentes de Lyapunov {exp_l}")
 
-    return render_template('output.html', fixed_points=fixed_points, stability = stability, j = j, exp_l = exp_l)
+    return render_template('output.html', fixed_points=fixed_points, stability = stability, j = j, eigen_values = eigen_values, exp_l = exp_l)
 
 
 def points_stability(f,g, fixed_points):
@@ -119,12 +121,13 @@ def points_stability(f,g, fixed_points):
                 stability.append((point, "punto repulsivo."))
         else:
             if len(set(eigen_values)) == 2:
-                if 0 < abs(eigen_values[0]) and abs(eigen_values[1])<1:
+                if (abs(eigen_values[0]) < 1 and 1 < abs(eigen_values[1])) or (abs(eigen_values[1]) < 1 and 1 < abs(eigen_values[0])):
+                    stability.append((point, "punto de silla."))
+                if 0 < abs(eigen_values[0]) < 1 and 0 < abs(eigen_values[1]) <1:
                     stability.append((point, "punto atractivo."))
                 if 1 < abs(eigen_values[0]) and 1 < abs(eigen_values[1]):
                     stability.append((point, "punto repulsivo."))
-                if abs(eigen_values[0]) < 1 and 1 < abs(eigen_values[1]):
-                    stability.append((point, "punto de silla."))
+
             if len(set(eigen_values)) == 1:
                 if abs(eigen_values[0]) < 1:
                     stability.append((point, "punto atractivo."))
