@@ -142,7 +142,7 @@ def lyapunov_exp(f,g,x0,y0):
     fy = vec.diff(y)
     A = Matrix([[fx,fy]])
     A_t = A.transpose()
-    return list((A*A_t).subs({x:x0,y:y0}).eigenvals().keys())
+    return list(map(lambda x: sqrt(x), list((A*A_t).subs({x:x0,y:y0}).eigenvals().keys())))
 
 
 if __name__ == '__main__':
