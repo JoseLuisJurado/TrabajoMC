@@ -19,6 +19,7 @@
   <script src="https://cdn.jsdelivr.net/npm/nerdamer@latest/Algebra.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/nerdamer@latest/Calculus.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/nerdamer@latest/Solve.js"></script>
+  <script scr="http://github.com/cowboy/jquery-dotimeout/raw/v1.0/jquery.ba-dotimeout.min.js"></script>
 
 </head>
 
@@ -61,7 +62,7 @@
       </aside>
 
       <main id="content" class="col px-0 flex-grow-1">
-        <div class="container-fluid">
+        <div class="container-fluid" style="padding-right: 0px;">
           <div class="px-3">
             <div id="input_data" class="row justify-content-between container border rounded bg-light mt-2 p-3">
               <div class="row px-2">
@@ -106,38 +107,97 @@
 
       <aside class="col-12 col-md-5 col-xl-3 p-2 border">
         <div id="output">
-          <div class="row p-2">
-            <label class="align-top col-md">Puntos fijos</label>
-            <ul class="col-md-8">
+          <div class="row pl-2">
+            <div class="row col-md">
+              <label class="align-top col-md">Puntos fijos</label>
+              <div class="col-3">
+
+                <figure>
+                  <img src="/static/question-mark-inside-a-circle.svg" class="align-top">
+                  <figcaption>
+                    Textito que aparece cuando pones encima del objeto ese feo
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+            <ul id="fixed_points" class="col-md-8">
               {% for fixed_point in fixed_points %}
-              <li>{{fixed_point}}</li>
+              <li>
+                <ul>
+                  <li>x: {{fixed_point[0]}}</li>
+                  <li>y: {{fixed_point[1]}}</li>
+                </ul>
+              </li>
               {% endfor %}
             </ul>
           </div>
-          <div class="row p-2">
-            <label class="align-top col-md">Estabilidad</label>
+          <div class="row pl-2">
+            <div class="row col-md">
+              <label class="align-top col-md">Estabilidad</label>
+              <div class="col-3">
+
+                <figure>
+                  <img src="/static/question-mark-inside-a-circle.svg" class="align-top">
+                  <figcaption>
+                    Textito que aparece cuando pones encima del objeto ese feo
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
             <ul class="col-sm-8">
               {% for point in stability %}
               <li>El punto ({{point[0][0]}},{{point[0][1]}}) tiene estabilidad: {{point[1]}}</li>
               {% endfor %}
             </ul>
           </div>
-          <div class="row p-2">
-            <label class="align-top col-md">Matriz Jacobiana</label>
+          <div class="row pl-2">
+            <div class="row col-md">
+              <label class="align-top col-md">Matriz Jacobiana</label>
+              <div class="col-3">
+                <figure>
+                  <img src="/static/question-mark-inside-a-circle.svg" class="align-top">
+                  <figcaption>
+                    Textito que aparece cuando pones encima del objeto ese feo
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
             <ul class="col-sm-8">
               {{j}}
             </ul>
           </div>
-          <div class="row p-2">
-            <label class="align-top col-md">Autovalores</label>
+          <div class="row pl-2">
+            <div class="row col-md">
+              <label class="align-top col-md">Autovalores</label>
+              <div class="col-3">
+
+                <figure>
+                  <img src="/static/question-mark-inside-a-circle.svg" class="align-top">
+                  <figcaption>
+                    Textito que aparece cuando pones encima del objeto ese feo
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
             <ul id="eigen_vals" class="col-sm-8">
               {% for i in range(eigen_values|length) %}
-              <li>&lambda;<sub>i</sub>: {{eigen_values[i]}}</li>
+              <li>&lambda;<sub>{{i}}</sub>: {{eigen_values[i]}}</li>
               {% endfor %}
             </ul>
           </div>
-          <div class="row p-2">
-            <label class="align-top col-md">Exponentes de Lyapunov</label>
+          <div class="row pl-2">
+            <div class="row col-md">
+              <label class="align-top col-md">Exponentes de Lyapunov </label>
+              <div class="col-3">
+
+                <figure>
+                  <img src="/static/question-mark-inside-a-circle.svg" class="align-top">
+                  <figcaption>
+                    Textito que aparece cuando pones encima del objeto ese feo
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
             <ul class="col-sm-8">
               <li>L<sub>1</sub>: {{exp_l[0]}}</li>
               <li>L<sub>2</sub>: {{exp_l[1]}}</li>

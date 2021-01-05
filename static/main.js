@@ -13,6 +13,7 @@ var go_button = document.body;
 var points = [];
 var params = [];
 var orbit;
+var li_cache, over = false;
 // Funciones
 
 
@@ -28,14 +29,14 @@ function init() {
     grab_vars();
     plot_orbita();
     plot_atractor();
-    if($("#eq_input").is(":checked")){
+    if ($("#eq_input").is(":checked")) {
       var _input = document.getElementById("eq").value;
       var _type = "eq"
-    } else{
+    } else {
       var matrix = [[document.getElementById("m_00").value,
-                    document.getElementById("m_01").value],
-                    [document.getElementById("m_10").value,
-                    document.getElementById("m_11").value]]
+      document.getElementById("m_01").value],
+      [document.getElementById("m_10").value,
+      document.getElementById("m_11").value]]
       var _input = `[[${matrix[0][0]},${matrix[0][1]}],[${matrix[1][0]},${matrix[1][1]}]]`
       var _type = "matrix"
     }
@@ -57,19 +58,19 @@ function init() {
       }
     });
   });
-  
+
 }
 
 function grab_vars() {
   try {
     try {
       stored_equation = document.getElementById("eq").value.split(",");
-    } catch(err) {
+    } catch (err) {
       var matrix = [[document.getElementById("m_00").value,
-                     document.getElementById("m_01").value],
-                    [document.getElementById("m_10").value,
-                     document.getElementById("m_11").value]]
-      stored_equation = `${matrix[0][0]}*x + ${matrix[0][1]}*y, ${matrix[1][0]}*x + ${matrix[1][1]}*y`.split(',')   
+      document.getElementById("m_01").value],
+      [document.getElementById("m_10").value,
+      document.getElementById("m_11").value]]
+      stored_equation = `${matrix[0][0]}*x + ${matrix[0][1]}*y, ${matrix[1][0]}*x + ${matrix[1][1]}*y`.split(',')
     }
     expr0 = math.parse(stored_equation[0].replace('**', '^'))
     expr1 = math.parse(stored_equation[1].replace('**', '^'))
@@ -81,19 +82,19 @@ function grab_vars() {
   } catch (err) { }
 }
 
-function find_params(){
+function find_params() {
   let stock = "xXyY";
   var params = new Set();
   values = {}
   values["x"] = parseFloat(document.getElementById("x0").value);
   values["y"] = parseFloat(document.getElementById("y0").value);
   stored_equation = document.getElementById('eq').value.split(",");
-  try{
+  try {
     expr0 = math.parse(stored_equation[0].replace('**', '^'))
     expr0.traverse(function (node, path, parent) {
       switch (node.type) {
         case 'SymbolNode':
-          if (!stock.includes(node.name)){
+          if (!stock.includes(node.name)) {
             params.add(node.name);
             values[node.name] = 0
           }
@@ -102,14 +103,14 @@ function find_params(){
           break;
       }
     })
-  } catch (err) {}
-  
-  try{
+  } catch (err) { }
+
+  try {
     expr1 = math.parse(stored_equation[1].replace('**', '^'))
     expr1.traverse(function (node, path, parent) {
       switch (node.type) {
         case 'SymbolNode':
-          if (!stock.includes(node.name)){
+          if (!stock.includes(node.name)) {
             params.add(node.name);
             values[node.name] = 0
           }
@@ -119,10 +120,10 @@ function find_params(){
           break;
       }
     })
-  } catch (err) {}
-  
+  } catch (err) { }
+
   var params_html = ""
-  params.forEach(function (param){
+  params.forEach(function (param) {
     params_html += `<div class="row p-2">
                   <label class="col-md" for="${param}">${param}</label>
                   <input class="col-sm-4" style="text-align: right" type="number" onchange="values[this.id]=parseFloat(this.value)" id="${param}" name="${param}" value="0.0" />
