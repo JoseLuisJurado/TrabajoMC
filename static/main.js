@@ -24,6 +24,9 @@ function init() {
   find_params();
   plot_orbita();
   plot_atractor();
+  $(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();   
+  });
   document.getElementById("eq").onkeyup(find_params())
   $("#go_button").click(function () {
     grab_vars();
@@ -51,6 +54,9 @@ function init() {
       data: { input: _input, values: _values, type: _type, n: _iterations, m: _final_iterations, x0: _x0, y0: _y0 },
       success: function (response) {
         $("#output").html(response);
+        $(document).ready(function(){
+          $('[data-toggle="tooltip"]').tooltip();   
+        });
       },
       error: function (xhr) {
         console.log("Hubo un error :/")

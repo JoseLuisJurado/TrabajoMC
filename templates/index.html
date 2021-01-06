@@ -6,20 +6,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sistemas Dinamicos Discretos</title>
   <link rel="stylesheet" href="{{ url_for('static', filename = 'style.css') }}" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous" />
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+    integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
     crossorigin="anonymous"></script>
   <script src="https://unpkg.com/mathjs@8.1.0/lib/browser/math.js"></script>
   <script src="https://cdn.plot.ly/plotly-1.35.2.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script src="{{ url_for('static', filename = 'main.js') }}"></script>
   <script src="https://cdn.jsdelivr.net/npm/nerdamer@latest/nerdamer.core.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/nerdamer@latest/Algebra.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/nerdamer@latest/Calculus.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/nerdamer@latest/Solve.js"></script>
-  <script scr="http://github.com/cowboy/jquery-dotimeout/raw/v1.0/jquery.ba-dotimeout.min.js"></script>
 
 </head>
 
@@ -64,8 +64,8 @@
       <main id="content" class="col px-0 flex-grow-1">
         <div class="container-fluid" style="padding-right: 0px;">
           <div class="px-3">
-            <div id="input_data" class="row justify-content-between container border rounded bg-light mt-2 p-3">
-              <div class="row px-2">
+            <div id="input_data" class="col justify-content-between container border rounded bg-light mt-2 p-3">
+              <div class=" row px-2">
                 <label class="col-sm-2" for="input_type">Tipo de entrada</label>
                 <div class="col-sm-2">
                   <label for="matrix_input">Matriz</label>
@@ -76,15 +76,18 @@
                 </div>
 
               </div>
-              <div id="input_type" class="row col-7 p-2">
-                <label for="eq">Introduce la ecuación</label>
-                <input text="text" id="eq" class="py-1" name="eq" onkeyup="find_params()" value="{{f}} , {{g}}"
-                  placeholder="f1(x,y),f2(x,y)" />
+              <div class="row">
+                <div id="input_type" class="row col px-2">
+                  <label for="eq" class="col-sm-4">Introduce la ecuación</label>
+                  <input text="text" id="eq" class="px-2 h-50 mt-2" name="eq" onkeyup="find_params()"
+                    value="{{f}} , {{g}}" placeholder="f1(x,y),f2(x,y)" />
+                </div>
+
+                <div class="col-5 d-flex justify-content-end mt-4 mb-2">
+                  <input class="btn btn-primary" id="go_button" type="button" value="Go!" />
+                </div>
               </div>
 
-              <div class="col-5 d-flex justify-content-end mt-4 mb-2">
-                <input class="btn btn-primary" id="go_button" type="button" value="Go!" />
-              </div>
             </div>
           </div>
 
@@ -108,18 +111,9 @@
       <aside class="col-12 col-md-5 col-xl-3 p-2 border">
         <div id="output">
           <div class="row pl-2">
-            <div class="row col-md">
-              <label class="align-top col-md">Puntos fijos</label>
-              <div class="col-3">
-
-                <figure>
-                  <img src="/static/question-mark-inside-a-circle.svg" class="align-top">
-                  <figcaption>
-                    Textito que aparece cuando pones encima del objeto ese feo
-                  </figcaption>
-                </figure>
-              </div>
-            </div>
+            <label data-toggle="tooltip" data-placement="bottom"
+              title="Sean (D,f) un sistema dinámico discreto y p ∈ D. Se dice que p es un punto fijo de f si f(p) = p."
+              class="align-top col-md">Puntos fijos</label>
             <ul id="fixed_points" class="col-md-8">
               {% for fixed_point in fixed_points %}
               <li>
@@ -132,18 +126,8 @@
             </ul>
           </div>
           <div class="row pl-2">
-            <div class="row col-md">
-              <label class="align-top col-md">Estabilidad</label>
-              <div class="col-3">
-
-                <figure>
-                  <img src="/static/question-mark-inside-a-circle.svg" class="align-top">
-                  <figcaption>
-                    Textito que aparece cuando pones encima del objeto ese feo
-                  </figcaption>
-                </figure>
-              </div>
-            </div>
+            <label data-toggle="tooltip" data-placement="bottom" title="Para investigar la estabilidad de un punto fijo x*, debemos calcular la matriz jacobiana de la función, evaluar el punto fijo y analizar el resultado numérico obtenido de los autovalores.
+            " class="align-top col-md">Estabilidad</label>
             <ul class="col-sm-8">
               {% for point in stability %}
               <li>El punto ({{point[0][0]}},{{point[0][1]}}) tiene estabilidad: {{point[1]}}</li>
@@ -151,34 +135,17 @@
             </ul>
           </div>
           <div class="row pl-2">
-            <div class="row col-md">
-              <label class="align-top col-md">Matriz Jacobiana</label>
-              <div class="col-3">
-                <figure>
-                  <img src="/static/question-mark-inside-a-circle.svg" class="align-top">
-                  <figcaption>
-                    Textito que aparece cuando pones encima del objeto ese feo
-                  </figcaption>
-                </figure>
-              </div>
-            </div>
+            <label data-toggle="tooltip" data-placement="bottom"
+              title="La matriz jacobiana es una matriz formada por las derivadas parciales de primer orden de una función."
+              class="align-top col-md">Matriz Jacobiana</label>
+
             <ul class="col-sm-8">
               {{j}}
             </ul>
           </div>
           <div class="row pl-2">
-            <div class="row col-md">
-              <label class="align-top col-md">Autovalores</label>
-              <div class="col-3">
-
-                <figure>
-                  <img src="/static/question-mark-inside-a-circle.svg" class="align-top">
-                  <figcaption>
-                    Textito que aparece cuando pones encima del objeto ese feo
-                  </figcaption>
-                </figure>
-              </div>
-            </div>
+            <label data-toggle="tooltip" data-placement="bottom" title="Sea A una matriz cuadrada de orden M. Diremos que un escalar λ ∈ K (= R o C) es un autovalor de A si existe un vector v ∈ K^m , v != 0 tal que Av = λv, en cuyo caso se dice que v es un autovector de A asociado al autovalor λ.
+            " class="align-top col-md">Autovalores</label>
             <ul id="eigen_vals" class="col-sm-8">
               {% for i in range(eigen_values|length) %}
               <li>&lambda;<sub>{{i}}</sub>: {{eigen_values[i]}}</li>
@@ -186,18 +153,8 @@
             </ul>
           </div>
           <div class="row pl-2">
-            <div class="row col-md">
-              <label class="align-top col-md">Exponentes de Lyapunov </label>
-              <div class="col-3">
-
-                <figure>
-                  <img src="/static/question-mark-inside-a-circle.svg" class="align-top">
-                  <figcaption>
-                    Textito que aparece cuando pones encima del objeto ese feo
-                  </figcaption>
-                </figure>
-              </div>
-            </div>
+            <label data-toggle="tooltip" data-placement="bottom" title="El Exponente Lyapunov o Exponente característico Lyapunov de un sistema dinámico es una cantidad que caracteriza el grado de separación de dos trayectorias infinitesimalmente cercanas.
+            " class="align-top col-md">Exponentes de Lyapunov </label>
             <ul class="col-sm-8">
               <li>L<sub>1</sub>: {{exp_l[0]}}</li>
               <li>L<sub>2</sub>: {{exp_l[1]}}</li>
@@ -207,7 +164,7 @@
       </aside>
       <script>
         $("#eq_input").click(function () {
-          $("#input_type").html('<label for="eq">Introduce la ecuación</label><input text="text" class="py-1" id="eq" name="eq" onkeyup="find_params()" value="{{f}} , {{g}}" placeholder="f1(x,y),f2(x,y)"/>')
+          $("#input_type").html('<label for="eq" class="col-sm-4">Introduce la ecuación</label><input text="text" id="eq" class="px-2 h-50 mt-2" name="eq" onkeyup="find_params()" value="{{f}} , {{g}}" placeholder="f1(x,y),f2(x,y)" />')
           stored_equation = document.getElementById("eq").value.split(",");
         })
         $("#matrix_input").click(function () {

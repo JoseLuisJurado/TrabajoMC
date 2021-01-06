@@ -1,5 +1,6 @@
 from flask import Flask, render_template, make_response, request
 from sympy import *
+import sympy
 import os
 import json
 init_printing()
@@ -53,54 +54,58 @@ def update_funcs():
     '''
     Se detalla paso por paso el funcionamiento de la siguiente función
     '''
-    if request.args.get('type') == "eq":
-        eq = request.args.get('input').split(',') # Almacenamos las funciones, que parseamos el las siguientes lineas
-        values = json.loads(request.args.get('values'))
-        print(f"Valores pasados: {values}")
-        values.pop("x")
-        values.pop("y")
-        f = sympify(eq[0].replace('^', '**')).subs(values)
-        g = sympify(eq[1].replace('^', '**')).subs(values)
-    else:
-        matrix = request.args.get('input')
-        print(matrix)
-        print(type(matrix))
-        matrix = Matrix(sympify(request.args.get('input')))
-        print(f"Matrix: {matrix}")
-        matrix = matrix*(Matrix([x,y]))
-        f = matrix.tolist()[0][0]
-        g = matrix.tolist()[1][0]
+    try:
+        if request.args.get('type') == "eq":
+            eq = request.args.get('input').split(',') # Almacenamos las funciones, que parseamos el las siguientes lineas
+            values = json.loads(request.args.get('values'))
+            print(f"Valores pasados: {values}")
+            values.pop("x")
+            values.pop("y")
+            f = sympify(eq[0].replace('^', '**')).subs(values)
+            g = sympify(eq[1].replace('^', '**')).subs(values)
+        else:
+            matrix = request.args.get('input')
+            print(matrix)
+            print(type(matrix))
+            matrix = Matrix(sympify(request.args.get('input')))
+            print(f"Matrix: {matrix}")
+            matrix = matrix*(Matrix([x,y]))
+            f = matrix.tolist()[0][0]
+            g = matrix.tolist()[1][0]
 
 
-    
-    #Recogemos las variables necesarias para la ejecución del estudio del mapa
-    n = int(request.args.get("n"))
-    m = int(request.args.get("m"))
-    print(f"n: {n}, m: {m}")
-    x0 = float(request.args.get("x0"))
-    y0 = float(request.args.get("y0"))
-    print(f"x0: {x0}, y0: {y0}")
-    print(f"funciones:{f,g}")
+        
+        #Recogemos las variables necesarias para la ejecución del estudio del mapa
+        n = int(request.args.get("n"))
+        m = int(request.args.get("m"))
+        print(f"n: {n}, m: {m}")
+        x0 = float(request.args.get("x0"))
+        y0 = float(request.args.get("y0"))
+        print(f"x0: {x0}, y0: {y0}")
+        print(f"funciones:{f,g}")
 
-    #Calculamos los puntos fijos resolviendo las ecuaciones del mapa
-    fixed_points = nonlinsolve([Eq(f,x), Eq(g,y)], (x,y))
-    #fixed_points = to_numerical(fixed_points)
-    print(f"puntos fijos:{fixed_points}")
+        #Calculamos los puntos fijos resolviendo las ecuaciones del mapa
+        fixed_points = nonlinsolve([Eq(f,x), Eq(g,y)], (x,y))
+        #fixed_points = to_numerical(fixed_points)
+        print(f"puntos fijos:{fixed_points}")
 
-    # #Calculamos la estabilidad de los puntos fijos mediante la funcion estabilidad
-    stability = points_stability(f, g, fixed_points)
-    print(f"estabilidad: {stability}")
+        # #Calculamos la estabilidad de los puntos fijos mediante la funcion estabilidad
+        stability = points_stability(f, g, fixed_points)
+        print(f"estabilidad: {stability}")
 
-    j = Matrix([f,g]).jacobian(Matrix([x,y])).tolist()
-    print(f"Jacobiana:{j}")
+        j = Matrix([f,g]).jacobian(Matrix([x,y])).tolist()
+        print(f"Jacobiana:{j}")
 
-    eigen_values = list(Matrix([f,g]).jacobian(Matrix([x,y])).eigenvals().keys())
-    print(f"Autovalores: {eigen_values}")
-    exp_l = lyapunov_exp(f,g, x0, y0)
-    print(f"Exponentes de Lyapunov {exp_l}")
+        eigen_values = list(Matrix([f,g]).jacobian(Matrix([x,y])).eigenvals().keys())
+        print(f"Autovalores: {eigen_values}")
+        exp_l = lyapunov_exp(f,g, x0, y0)
+        print(f"Exponentes de Lyapunov {exp_l}")
 
-    return render_template('output.html', fixed_points=fixed_points, stability = stability, j = j, eigen_values = eigen_values, exp_l = exp_l)
-
+        return render_template('output.html', fixed_points=fixed_points, stability = stability, j = j, eigen_values = eigen_values, exp_l = exp_l)
+    except:
+        print(f'''Ha ocurrido un error. Es probable que sea debido a la version instalada de Sympy.
+                  Actualmente tiene instalada la versión: {sympy.__version__}.
+                  Intente instalar la ultima version usando: pip install sympy --upgrade''')
 
 def points_stability(f,g, fixed_points):
     stability = list()
