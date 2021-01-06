@@ -1,5 +1,7 @@
 <div class="row pl-2">
-  <label data-toggle="tooltip" data-placement="top" title="Sean (D,f) un sistema dinámico discreto y p ∈ D. Se dice que p es un punto fijo de f si f(p) = p." class="align-top col-md">Puntos fijos</label>
+  <label data-toggle="tooltip" data-placement="top"
+    title="Sean (D,f) un sistema dinámico discreto y p ∈ D. Se dice que p es un punto fijo de f si f(p) = p."
+    class="align-top col-md">Puntos fijos</label>
   <ul id="fixed_points" class="col-md-8">
     {% for fixed_point in fixed_points %}
     <li>
@@ -12,7 +14,7 @@
   </ul>
 </div>
 <div class="row pl-2">
-  <label data-toggle="tooltip" data-placement="top" title = "Para investigar la estabilidad de un punto fijo x*, debemos calcular la matriz jacobiana de la función, evaluar el punto fijo y analizar el resultado numérico obtenido de los autovalores.
+  <label data-toggle="tooltip" data-placement="top" title="Para investigar la estabilidad de un punto fijo x*, debemos calcular la matriz jacobiana de la función, evaluar el punto fijo y analizar el resultado numérico obtenido de los autovalores.
   " class="align-top col-md">Estabilidad</label>
   <ul class="col-sm-8">
     {% for point in stability %}
@@ -21,7 +23,9 @@
   </ul>
 </div>
 <div class="row pl-2">
-  <label data-toggle="tooltip" data-placement="top" title="La matriz jacobiana es una matriz formada por las derivadas parciales de primer orden de una función." class="align-top col-md">Matriz Jacobiana</label>
+  <label data-toggle="tooltip" data-placement="top"
+    title="La matriz jacobiana es una matriz formada por las derivadas parciales de primer orden de una función."
+    class="align-top col-md">Matriz Jacobiana</label>
 
   <ul class="col-sm-8">
     {{j}}

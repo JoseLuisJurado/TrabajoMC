@@ -17,19 +17,20 @@ durante la ejecución de código cuando se produce un core_dump
 '''
 if os.path.exists("python3.stackdump"):
     os.remove("python3.stackdump")
-    
+
 app = Flask(__name__, template_folder="templates")
 
 print("Se inicia la aplicación")
 
 
-x,y = symbols('x y')
-n = None 
-m = None 
+x, y = symbols('x y')
+n = None
+m = None
 x0 = None
 y0 = None
 f = None
 g = None
+
 
 @app.route('/')
 def init():
@@ -38,15 +39,15 @@ def init():
     Carga una serie de valores por defecto que introduce en la página en su inicio.
     '''
     eq = "a -x^2 + b*y + 1.2,x".split(',')
-    A = [[1,1],[1,2]]
+    A = [[1, 1], [1, 2]]
     f = sympify(eq[0].replace('^', '**'))
     g = sympify(eq[1].replace('^', '**'))
     n = 100
     m = 0
     x0 = 0.
     y0 = 1.
-    exp_l = ["",""]
-    return render_template("index.html", f=f, g=g, A=A, n=n, m=m, x0=x0, y0=y0, exp_l = exp_l)
+    exp_l = ["", ""]
+    return render_template("index.html", f=f, g=g, A=A, n=n, m=m, x0=x0, y0=y0, exp_l=exp_l)
 
 
 @app.route('/output')
@@ -56,7 +57,8 @@ def update_funcs():
     '''
     try:
         if request.args.get('type') == "eq":
-            eq = request.args.get('input').split(',') # Almacenamos las funciones, que parseamos el las siguientes lineas
+            # Almacenamos las funciones, que parseamos el las siguientes lineas
+            eq = request.args.get('input').split(',')
             values = json.loads(request.args.get('values'))
             print(f"Valores pasados: {values}")
             values.pop("x")
@@ -69,13 +71,11 @@ def update_funcs():
             print(type(matrix))
             matrix = Matrix(sympify(request.args.get('input')))
             print(f"Matrix: {matrix}")
-            matrix = matrix*(Matrix([x,y]))
+            matrix = matrix*(Matrix([x, y]))
             f = matrix.tolist()[0][0]
             g = matrix.tolist()[1][0]
 
-
-        
-        #Recogemos las variables necesarias para la ejecución del estudio del mapa
+        # Recogemos las variables necesarias para la ejecución del estudio del mapa
         n = int(request.args.get("n"))
         m = int(request.args.get("m"))
         print(f"n: {n}, m: {m}")
@@ -84,8 +84,8 @@ def update_funcs():
         print(f"x0: {x0}, y0: {y0}")
         print(f"funciones:{f,g}")
 
-        #Calculamos los puntos fijos resolviendo las ecuaciones del mapa
-        fixed_points = nonlinsolve([Eq(f,x), Eq(g,y)], (x,y))
+        # Calculamos los puntos fijos resolviendo las ecuaciones del mapa
+        fixed_points = nonlinsolve([Eq(f, x), Eq(g, y)], (x, y))
         #fixed_points = to_numerical(fixed_points)
         print(f"puntos fijos:{fixed_points}")
 
@@ -93,29 +93,32 @@ def update_funcs():
         stability = points_stability(f, g, fixed_points)
         print(f"estabilidad: {stability}")
 
-        j = Matrix([f,g]).jacobian(Matrix([x,y])).tolist()
+        j = Matrix([f, g]).jacobian(Matrix([x, y])).tolist()
         print(f"Jacobiana:{j}")
 
-        eigen_values = list(Matrix([f,g]).jacobian(Matrix([x,y])).eigenvals().keys())
+        eigen_values = list(Matrix([f, g]).jacobian(
+            Matrix([x, y])).eigenvals().keys())
         print(f"Autovalores: {eigen_values}")
-        exp_l = lyapunov_exp(f,g, x0, y0)
+        exp_l = lyapunov_exp(f, g, x0, y0)
         print(f"Exponentes de Lyapunov {exp_l}")
 
-        return render_template('output.html', fixed_points=fixed_points, stability = stability, j = j, eigen_values = eigen_values, exp_l = exp_l)
+        return render_template('output.html', fixed_points=fixed_points, stability=stability, j=j, eigen_values=eigen_values, exp_l=exp_l)
     except:
         print(f'''Ha ocurrido un error. Es probable que sea debido a la version instalada de Sympy.
                   Actualmente tiene instalada la versión: {sympy.__version__}.
                   Intente instalar la ultima version usando: pip install sympy --upgrade''')
 
-def points_stability(f,g, fixed_points):
+
+def points_stability(f, g, fixed_points):
     stability = list()
-    vec = Matrix([f,g])
+    vec = Matrix([f, g])
     fx = vec.diff(x)
     fy = vec.diff(y)
-    Df = Matrix([[fx,fy]]).transpose()
+    Df = Matrix([[fx, fy]]).transpose()
 
     for point in fixed_points:
-        eigen_values=list(Df.subs({x:point[0],y:point[1]}).eigenvals().keys())
+        eigen_values = list(
+            Df.subs({x: point[0], y: point[1]}).eigenvals().keys())
         if im(eigen_values[0]) != 0:
             a = re(eigen_values[0])
             b = im(eigen_values[0])
@@ -128,7 +131,7 @@ def points_stability(f,g, fixed_points):
             if len(set(eigen_values)) == 2:
                 if (abs(eigen_values[0]) < 1 and 1 < abs(eigen_values[1])) or (abs(eigen_values[1]) < 1 and 1 < abs(eigen_values[0])):
                     stability.append((point, "punto de silla."))
-                if 0 < abs(eigen_values[0]) < 1 and 0 < abs(eigen_values[1]) <1:
+                if 0 < abs(eigen_values[0]) < 1 and 0 < abs(eigen_values[1]) < 1:
                     stability.append((point, "punto atractivo."))
                 if 1 < abs(eigen_values[0]) and 1 < abs(eigen_values[1]):
                     stability.append((point, "punto repulsivo."))
@@ -141,14 +144,14 @@ def points_stability(f,g, fixed_points):
     return stability
 
 
-def lyapunov_exp(f,g,x0,y0):
-    vec = Matrix([f,g])
+def lyapunov_exp(f, g, x0, y0):
+    vec = Matrix([f, g])
     fx = vec.diff(x)
     fy = vec.diff(y)
-    A = Matrix([[fx,fy]])
+    A = Matrix([[fx, fy]])
     A_t = A.transpose()
-    return list(map(lambda x: sqrt(x), list((A*A_t).subs({x:x0,y:y0}).eigenvals().keys())))
+    return list(map(lambda x: sqrt(x), list((A*A_t).subs({x: x0, y: y0}).eigenvals().keys())))
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port = 5500)
+    app.run(host="0.0.0.0", port=5500)

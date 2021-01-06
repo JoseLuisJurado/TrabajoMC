@@ -24,8 +24,13 @@ function init() {
   find_params();
   plot_orbita();
   plot_atractor();
-  $(document).ready(function(){
-    $('[data-toggle="tooltip"]').tooltip();   
+  $("#eq_input").click(function () {
+    $("#input_type").html(`<label for="eq" class="col-sm-4">Introduce la ecuación</label><input text="text" id="eq" class="px-2 h-50 mt-2" name="eq" onkeyup="find_params()" value="${stored_equation[0] + "," + stored_equation[1]}" placeholder="f1(x,y),f2(x,y)" />`)
+    find_params();
+  })
+
+  $(document).ready(function () {
+    $('[data-toggle="tooltip"]').tooltip();
   });
   document.getElementById("eq").onkeyup(find_params())
   $("#go_button").click(function () {
@@ -54,8 +59,8 @@ function init() {
       data: { input: _input, values: _values, type: _type, n: _iterations, m: _final_iterations, x0: _x0, y0: _y0 },
       success: function (response) {
         $("#output").html(response);
-        $(document).ready(function(){
-          $('[data-toggle="tooltip"]').tooltip();   
+        $(document).ready(function () {
+          $('[data-toggle="tooltip"]').tooltip();
         });
       },
       error: function (xhr) {
@@ -94,48 +99,54 @@ function find_params() {
   values = {}
   values["x"] = parseFloat(document.getElementById("x0").value);
   values["y"] = parseFloat(document.getElementById("y0").value);
-  stored_equation = document.getElementById('eq').value.split(",");
   try {
-    expr0 = math.parse(stored_equation[0].replace('**', '^'))
-    expr0.traverse(function (node, path, parent) {
-      switch (node.type) {
-        case 'SymbolNode':
-          if (!stock.includes(node.name)) {
-            params.add(node.name);
-            values[node.name] = 0
-          }
-          break
-        default:
-          break;
-      }
-    })
-  } catch (err) { }
+    stored_equation = document.getElementById('eq').value.split(",");
 
-  try {
-    expr1 = math.parse(stored_equation[1].replace('**', '^'))
-    expr1.traverse(function (node, path, parent) {
-      switch (node.type) {
-        case 'SymbolNode':
-          if (!stock.includes(node.name)) {
-            params.add(node.name);
-            values[node.name] = 0
-          }
-          break
-        default:
-          console.log(node.type);
-          break;
-      }
-    })
-  } catch (err) { }
+    try {
+      expr0 = math.parse(stored_equation[0].replace('**', '^'))
+      expr0.traverse(function (node, path, parent) {
+        switch (node.type) {
+          case 'SymbolNode':
+            if (!stock.includes(node.name)) {
+              params.add(node.name);
+              values[node.name] = 0
+            }
+            break
+          default:
+            break;
+        }
+      })
+    } catch (err) { }
 
-  var params_html = ""
-  params.forEach(function (param) {
-    params_html += `<div class="row p-2">
+    try {
+      expr1 = math.parse(stored_equation[1].replace('**', '^'))
+      expr1.traverse(function (node, path, parent) {
+        switch (node.type) {
+          case 'SymbolNode':
+            if (!stock.includes(node.name)) {
+              params.add(node.name);
+              values[node.name] = 0
+            }
+            break
+          default:
+            console.log(node.type);
+            break;
+        }
+      })
+    } catch (err) { }
+
+    var params_html = ""
+    params.forEach(function (param) {
+      params_html += `<div class="row p-2">
                   <label class="col-md" for="${param}">${param}</label>
                   <input class="col-sm-4" style="text-align: right" type="number" onchange="values[this.id]=parseFloat(this.value)" id="${param}" name="${param}" value="0.0" />
                   </div>`
-  })
-  document.getElementById("params").innerHTML = params_html
+    })
+    document.getElementById("params").innerHTML = params_html
+
+  } catch (err) {
+    document.getElementById("params").innerHTML = ""
+  }
 
 }
 function orbita() {

@@ -77,7 +77,7 @@
 
               </div>
               <div class="row">
-                <div id="input_type" class="row col px-2">
+                <div id="input_type" class="row col px-3">
                   <label for="eq" class="col-sm-4">Introduce la ecuación</label>
                   <input text="text" id="eq" class="px-2 h-50 mt-2" name="eq" onkeyup="find_params()"
                     value="{{f}} , {{g}}" placeholder="f1(x,y),f2(x,y)" />
@@ -163,21 +163,18 @@
         </div>
       </aside>
       <script>
-        $("#eq_input").click(function () {
-          $("#input_type").html('<label for="eq" class="col-sm-4">Introduce la ecuación</label><input text="text" id="eq" class="px-2 h-50 mt-2" name="eq" onkeyup="find_params()" value="{{f}} , {{g}}" placeholder="f1(x,y),f2(x,y)" />')
-          stored_equation = document.getElementById("eq").value.split(",");
-        })
         $("#matrix_input").click(function () {
           $("#input_type").html(`<label for="matrix" class="col-sm-4">Introduce la matriz</label>
-          <div class="col-sm-3">
-            {% for i in range(2) %}
-              <div class="row">
-              {% for j in range(2) %}
-                <input class="col-sm-5" text="text" id="m_{{i}}{{j}}" name="matrix" value="{{A[i][j]}}" placeholder="x_{{i}}{{j}}">
-              {% endfor %}
-              </div>
-            {% endfor %}
-          </div>`)
+                                  <div class="col-sm-3">
+                                    {% for i in range(2) %}
+                                      <div class="row">
+                                      {% for j in range(2) %}
+                                        <input class="col-sm-5" text="text" id="m_{{i}}{{j}}" name="matrix" value="{{A[i][j]}}" placeholder="x_{{i}}{{j}}">
+                                      {% endfor %}
+                                      </div>
+                                    {% endfor %}
+                                  </div>`)
+          find_params();
         })
       </script>
   </div>
