@@ -154,4 +154,4 @@ def lyapunov_exp(f, g, x0, y0):
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5500)
+    app.run(host="localhost", port=5500)
