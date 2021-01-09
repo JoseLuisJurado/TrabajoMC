@@ -2,6 +2,7 @@ from flask import Flask, render_template, make_response, request
 from sympy import *
 import sympy
 import os
+import sys
 import json
 init_printing()
 
@@ -18,7 +19,11 @@ durante la ejecución de código cuando se produce un core_dump
 if os.path.exists("python3.stackdump"):
     os.remove("python3.stackdump")
 
-app = Flask(__name__, template_folder="templates")
+if getattr(sys, 'frozen', False):
+    template_folder = os.path.join(sys._MEIPASS, 'templates')
+    app = Flask(__name__, template_folder=template_folder)
+else:
+    app = Flask(__name__)
 
 print("Se inicia la aplicación")
 
