@@ -24,6 +24,7 @@ function init() {
   find_params();
   plot_orbita();
   plot_atractor();
+  plot_cuenca();
   $("#eq_input").click(function () {
     $("#input_type").html(`<label for="eq" class="col-sm-4">Introduce la ecuación</label><input text="text" id="eq" class="px-2 h-50 mt-2" name="eq" onkeyup="find_params()" value="${stored_equation[0] + "," + stored_equation[1]}" placeholder="f1(x,y),f2(x,y)" />`)
     find_params();
@@ -34,9 +35,13 @@ function init() {
   $('#att_tab').on('shown.bs.tab', function () {
     plot_atractor();
   })
-  window.addEventListener('resize', function (){
+  $('#cue_tab').on('shown.bs.tab', function () {
+    plot_cuenca();
+  })
+  window.addEventListener('resize', function () {
     plot_atractor();
     plot_orbita();
+    plot_cuenca();
   })
   $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip();
@@ -46,6 +51,7 @@ function init() {
     grab_vars();
     plot_orbita();
     plot_atractor();
+    plot_cuenca();
     if ($("#eq_input").is(":checked")) {
       var _input = document.getElementById("eq").value;
       var _type = "eq"
@@ -62,11 +68,16 @@ function init() {
     var _x0 = parseFloat(document.getElementById("x0").value);
     var _y0 = parseFloat(document.getElementById("y0").value);
     var _values = JSON.stringify(values)
+
     $.ajax({
       url: "/output",
       type: "get",
       data: { input: _input, values: _values, type: _type, n: _iterations, m: _final_iterations, x0: _x0, y0: _y0 },
+      beforeSend: function(){
+        $("#loading").show();
+      },
       success: function (response) {
+        $("#loading").hide();
         $("#output").html(response);
         $(document).ready(function () {
           $('[data-toggle="tooltip"]').tooltip();
@@ -246,3 +257,28 @@ function plot_atractor() {
 
 }
 
+function plot_cuenca() {
+  const trace1 = {
+    x: orbit[0],
+    y: orbit[1],
+    type: "scatter",
+    name: "f(x0,y0)"
+  };
+  // render the plot using plotly
+  var trace2 = {
+    x: [Math.min(...orbit[0]), Math.max(...orbit[0])],
+    y: [Math.min(...orbit[1]), Math.max(...orbit[0])],
+    type: "scatter",
+    name: "y = x"
+  }
+
+  const layout = {
+    paper_bgcolor: '#ffffff',
+    plot_bgcolor: '#ffffff',
+    title: 'Representación de los atractores'
+  };
+
+  const data = [trace1, trace2];
+  Plotly.newPlot("plot_cue", data, layout);
+
+}

@@ -32,7 +32,10 @@ x, y = symbols('x y')
 n = None
 m = None
 x0 = None
+xn = None
 y0 = None
+yn = None
+k = None
 f = None
 g = None
 
@@ -50,9 +53,12 @@ def init():
     n = 100
     m = 0
     x0 = 0.
+    xn = x0 + 10
     y0 = 1.
+    yn = y0 + 10
+    k = 10
     exp_l = ["", ""]
-    return render_template("index.html", f=f, g=g, A=A, n=n, m=m, x0=x0, y0=y0, exp_l=exp_l)
+    return render_template("index.html", f=f, g=g, A=A, n=n, m=m, x0=x0, y0=y0, xn = xn, yn = yn, k=k, exp_l=exp_l)
 
 
 @app.route('/output')

@@ -27,5 +27,7 @@ aside{
   width: 100%;
 }
 
-
+#loading{
+  display: none;
+}
 
