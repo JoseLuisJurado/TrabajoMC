@@ -2,6 +2,7 @@ from flask import Flask, render_template, make_response, request
 from sympy import *
 import sympy
 import os
+import sys
 import json
 init_printing()
 
@@ -18,7 +19,11 @@ durante la ejecución de código cuando se produce un core_dump
 if os.path.exists("python3.stackdump"):
     os.remove("python3.stackdump")
 
-app = Flask(__name__, template_folder="templates")
+if getattr(sys, 'frozen', False):
+    template_folder = os.path.join(sys._MEIPASS, 'templates')
+    app = Flask(__name__, template_folder=template_folder)
+else:
+    app = Flask(__name__)
 
 print("Se inicia la aplicación")
 
@@ -27,7 +32,10 @@ x, y = symbols('x y')
 n = None
 m = None
 x0 = None
+xn = None
 y0 = None
+yn = None
+k = None
 f = None
 g = None
 
@@ -38,16 +46,19 @@ def init():
     La siguiente función se encarga de iniciar la página.
     Carga una serie de valores por defecto que introduce en la página en su inicio.
     '''
-    eq = "a -x^2 + b*y,x".split(',')
+    eq = "a - x^2 + b*y, x".split(',')
     A = [[1, 1], [1, 2]]
     f = sympify(eq[0].replace('^', '**'))
     g = sympify(eq[1].replace('^', '**'))
     n = 100
     m = 0
     x0 = 0.
+    xn = x0 + 10
     y0 = 1.
+    yn = y0 + 10
+    k = 10
     exp_l = ["", ""]
-    return render_template("index.html", f=f, g=g, A=A, n=n, m=m, x0=x0, y0=y0, exp_l=exp_l)
+    return render_template("index.html", f=f, g=g, A=A, n=n, m=m, x0=x0, y0=y0, xn = xn, yn = yn, k=k, exp_l=exp_l)
 
 
 @app.route('/output')
@@ -152,8 +163,6 @@ def lyapunov_exp(f, g, x0, y0):
     A = Matrix([[fx, fy]])
     A_t = A.transpose()
     return list(map(lambda x: sqrt(x), list((A*A_t).subs({x: x0, y: y0}).eigenvals().keys())))
-
-
 
 
 if __name__ == '__main__':
