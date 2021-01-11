@@ -233,8 +233,8 @@ function red() {
       itMap["y"] = y_cal;
       xs.push(x_cal);
       ys.push(y_cal);
-      xs.push(y_cal);
-      ys.push(y_cal)
+      xs.push(x_cal);
+      ys.push(x_cal)
 
     }
   } else if (m > 0) {
@@ -308,15 +308,17 @@ function plot_cuenca() {
   const trace1 = {
     x: orbit[0],
     y: orbit[1],
+    mode: 'markers',
     type: "scatter",
-    name: "f(x0,y0)"
+    name: "Atractores",
+    marker: { size: 10 }
   };
 
   const trace2 = {
     x: cuenca[0],
     y: cuenca[1],
     type: "scatter",
-    name: "cuenca"
+    name: "Cuenca"
   }
   // render the plot using plotly
   var trace3 = {
