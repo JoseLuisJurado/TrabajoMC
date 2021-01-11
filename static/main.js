@@ -13,6 +13,7 @@ var go_button = document.body;
 var points = [];
 var params = [];
 var orbit;
+var cuenca;
 var li_cache, over = false;
 // Funciones
 
@@ -73,7 +74,7 @@ function init() {
       url: "/output",
       type: "get",
       data: { input: _input, values: _values, type: _type, n: _iterations, m: _final_iterations, x0: _x0, y0: _y0 },
-      beforeSend: function(){
+      beforeSend: function () {
         $("#loading").show();
       },
       success: function (response) {
@@ -170,7 +171,6 @@ function find_params() {
 
 }
 function orbita() {
-  // take expresion and compile in mathjs
   var xs = [];
   var ys = [];
 
@@ -212,6 +212,52 @@ function orbita() {
 
   return [xs, ys];
 }
+
+function red() {
+  var xs = [x0];
+  var ys = [y0];
+
+  var itMap = Object.assign({}, values);
+
+  var n = iterations
+  var m = final_iterations
+
+  if (m < 0) {
+    alert("Las iteraciones finales (m) no pueden ser menores negativas.")
+  } else if (m == 0) {
+
+    for (let i = 0; i < n + 1; i++) {
+      x_cal = expr0.evaluate(itMap);
+      y_cal = expr1.evaluate(itMap);
+      itMap["x"] = x_cal;
+      itMap["y"] = y_cal;
+      xs.push(x_cal);
+      ys.push(y_cal);
+      xs.push(y_cal);
+      ys.push(y_cal)
+
+    }
+  } else if (m > 0) {
+
+    m += n;
+
+    for (let i = 0; i < m + 1; i++) {
+
+      x_cal = expr0.evaluate(itMap);
+      y_cal = expr1.evaluate(itMap);
+      itMap["x"] = x_cal;
+      itMap["y"] = y_cal;
+
+      if (i > n) {
+        xs.push(x_cal);
+        ys.push(y_cal);
+      }
+    }
+  }
+
+  return [xs, ys];
+}
+
 
 
 function plot_orbita() {
@@ -258,14 +304,22 @@ function plot_atractor() {
 }
 
 function plot_cuenca() {
+  cuenca = red();
   const trace1 = {
     x: orbit[0],
     y: orbit[1],
     type: "scatter",
     name: "f(x0,y0)"
   };
+
+  const trace2 = {
+    x: cuenca[0],
+    y: cuenca[1],
+    type: "scatter",
+    name: "cuenca"
+  }
   // render the plot using plotly
-  var trace2 = {
+  var trace3 = {
     x: [Math.min(...orbit[0]), Math.max(...orbit[0])],
     y: [Math.min(...orbit[1]), Math.max(...orbit[0])],
     type: "scatter",
@@ -278,7 +332,7 @@ function plot_cuenca() {
     title: 'Representación de los atractores'
   };
 
-  const data = [trace1, trace2];
+  const data = [trace1, trace2, trace3];
   Plotly.newPlot("plot_cue", data, layout);
 
 }

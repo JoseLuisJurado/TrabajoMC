@@ -46,7 +46,7 @@ def init():
     La siguiente función se encarga de iniciar la página.
     Carga una serie de valores por defecto que introduce en la página en su inicio.
     '''
-    eq = "a -x^2 + b*y + 1.2,x".split(',')
+    eq = "a - x^2 + b*y, x".split(',')
     A = [[1, 1], [1, 2]]
     f = sympify(eq[0].replace('^', '**'))
     g = sympify(eq[1].replace('^', '**'))
