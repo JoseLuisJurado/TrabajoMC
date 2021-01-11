@@ -58,7 +58,7 @@ def init():
     yn = y0 + 10
     k = 10
     exp_l = ["", ""]
-    return render_template("index.html", f=f, g=g, A=A, n=n, m=m, x0=x0, y0=y0, xn = xn, yn = yn, k=k, exp_l=exp_l)
+    return render_template("index.html", f=f, g=g, A=A, n=n, m=m, x0=x0, y0=y0, exp_l=exp_l)
 
 
 @app.route('/output')

@@ -43,10 +43,6 @@
             <label class="col-md" for="vars">Iteraciones finales (m, 0 si no hay final)</label>
             <input class="col-sm-4" style="text-align: right" type="number" id="m" name="m" value="{{m}}" />
           </div>
-          <div class="row p-2">
-            <label class="col-md" for="vars">Puntos iniciales (k)</label>
-            <input class="col-sm-4" style="text-align: right" type="number" id="k" name="k" value="{{k}}" />
-          </div>
         </div>
         <div class="border-top py-2">
           <div class="seccion">Parámetros</div>
@@ -55,16 +51,8 @@
             <input class="col-sm-4" style="text-align: right" type="number" step="any" id="x0" name="x0" value="{{x0}}" />
           </div>
           <div class="row p-2">
-            <label class="col-md" for="x0">X<sub>n</sub></label>
-            <input class="col-sm-4" style="text-align: right" type="number" step="any" id="x0" name="x0" value="{{xn}}" />
-          </div>
-          <div class="row p-2">
             <label class="col-md" for="y0">Y<sub>0</sub></label>
             <input class="col-sm-4" style="text-align: right" type="number" step="any" id="y0" name="y0" value="{{y0}}" />
-          </div>
-          <div class="row p-2">
-            <label class="col-md" for="x0">Y<sub>n</sub></label>
-            <input class="col-sm-4" style="text-align: right" type="number" step="any" id="x0" name="x0" value="{{yn}}" />
           </div>
           <div id="params">
 
@@ -109,12 +97,6 @@
           <div class="row min-vh-80 flex-column flex-md-row mt-2 ml-1 border rounded container-fluid plots">
             <main class="col px-0 flex-grow-1">
               <div class="flex-grow-1 p-3">
-                <p>
-                  Para estudiar los atractores de un mapa bidimensional usamos dos gráficos vistos en la Práctica 5.
-                  Estos gráficos nos muestran las cuencas de atracción con opciones de ajustar la cantidad de valores
-                  calculados y
-                  de iteraciones finales.
-                </p>
                 <ul class="nav nav-tabs">
                   <li class="nav-item">
                     <a class="nav-link active" id="orb_tab" data-toggle="tab" role="tab" onclick=""
