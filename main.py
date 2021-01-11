@@ -54,6 +54,7 @@ def init():
 def update_funcs():
     '''
     Se detalla paso por paso el funcionamiento de la siguiente función
+    
     '''
     try:
         if request.args.get('type') == "eq":
