@@ -108,8 +108,11 @@ def update_funcs():
         j = Matrix([f, g]).jacobian(Matrix([x, y])).tolist()
         print(f"Jacobiana:{j}")
 
-        eigen_values = list(Matrix([f, g]).jacobian(
+        f_eigen_values = list(Matrix([f, g]).jacobian(
             Matrix([x, y])).eigenvals().keys())
+
+        eigen_values = [list(f.subs({x:p[0], y:p[1]}) for f in f_eigen_values) for p in fixed_points]
+        
         print(f"Autovalores: {eigen_values}")
         exp_l = lyapunov_exp(f, g, x0, y0)
         print(f"Exponentes de Lyapunov {exp_l}")
