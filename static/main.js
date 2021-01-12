@@ -171,9 +171,9 @@ function find_params() {
 
 }
 function orbita() {
-  var xs = [];
-  var ys = [];
-
+  var xs = [x0];
+  var ys = [y0];
+  
   var itMap = Object.assign({}, values);
 
   var n = iterations
@@ -274,7 +274,7 @@ function plot_orbita() {
   const layout = {
     paper_bgcolor: '#ffffff',
     plot_bgcolor: '#ffffff',
-    title: 'Representación de orbita'
+    title: 'Representación de la órbita'
   };
 
   const data = [trace1];
