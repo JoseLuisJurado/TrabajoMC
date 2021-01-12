@@ -6,8 +6,8 @@
     {% for fixed_point in fixed_points %}
     <li>
       <ul>
-        <li>x: {{fixed_point[0]}}</li>
-        <li>y: {{fixed_point[1]}}</li>
+        <li>x: {{fixed_point[0]|round(3)}}</li>
+        <li>y: {{fixed_point[1]|round(3)}}</li>
       </ul>
     </li>
     {% endfor %}
@@ -18,7 +18,7 @@
   " class="align-top col-4 col-md">Estabilidad</label>
   <ul class="col px-1 col-sm-8">
     {% for point in stability %}
-    <li>El punto ({{point[0][0]}},{{point[0][1]}}) tiene estabilidad: {{point[1]}}</li>
+    <li>El punto ({{point[0][0]|round(3)}},{{point[0][1]|round(3)}}) tiene estabilidad: {{point[1]}}</li>
     {% endfor %}
   </ul>
 </div>
@@ -46,7 +46,7 @@
   <label data-toggle="tooltip" data-placement="bottom" title="El Exponente Lyapunov o Exponente característico Lyapunov de un sistema dinámico es una cantidad que caracteriza el grado de separación de dos trayectorias infinitesimalmente cercanas.
   " class="align-top col-4 col-md">Exponentes de Lyapunov </label>
   <ul class="col col-sm-8">
-    <li>L<sub>1</sub>: {{exp_l[0]}}</li>
-    <li>L<sub>2</sub>: {{exp_l[1]}}</li>
+    <li>L<sub>1</sub>: {{exp_l[0]|round(3)}}</li>
+    <li>L<sub>2</sub>: {{exp_l[1]|round(3)}}</li>
   </ul>
 </div>
