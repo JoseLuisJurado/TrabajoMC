@@ -118,8 +118,11 @@ def update_funcs():
         print(f"Exponentes de Lyapunov {exp_l}")
 
         return render_template('output.html', fixed_points=fixed_points, stability=stability, j=j, eigen_values=eigen_values, exp_l=exp_l)
-    except:
-        print(f'''Ha ocurrido un error. Es probable que sea debido a la version instalada de Sympy.
+    except Exception as ex:
+        template = "Ocurrio una excepción del tipo: {0}. Los detalles son:\n{1!r}"
+        message = template.format(type(ex).__name__, ex.args)
+        print(message)
+        print(f''' Es probable que sea debido a la version instalada de Sympy.
                   Actualmente tiene instalada la versión: {sympy.__version__}.
                   Intente instalar la ultima version usando: pip install sympy --upgrade''')
 

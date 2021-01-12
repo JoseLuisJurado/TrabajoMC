@@ -320,13 +320,7 @@ function plot_cuenca() {
     type: "scatter",
     name: "Cuenca"
   }
-  // render the plot using plotly
-  var trace3 = {
-    x: [Math.min(...orbit[0]), Math.max(...orbit[0])],
-    y: [Math.min(...orbit[1]), Math.max(...orbit[0])],
-    type: "scatter",
-    name: "y = x"
-  }
+
 
   const layout = {
     paper_bgcolor: '#ffffff',
@@ -334,7 +328,7 @@ function plot_cuenca() {
     title: 'Representación de los atractores'
   };
 
-  const data = [trace1, trace2, trace3];
+  const data = [trace1, trace2];
   Plotly.newPlot("plot_cue", data, layout);
 
 }
