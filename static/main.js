@@ -171,8 +171,8 @@ function find_params() {
 
 }
 function orbita() {
-  var xs = [x0];
-  var ys = [y0];
+  var xs = [x0.value];
+  var ys = [y0.value];
   
   var itMap = Object.assign({}, values);
 
@@ -214,8 +214,8 @@ function orbita() {
 }
 
 function red() {
-  var xs = [x0];
-  var ys = [y0];
+  var xs = [x0.value];
+  var ys = [y0.value];
 
   var itMap = Object.assign({}, values);
 
