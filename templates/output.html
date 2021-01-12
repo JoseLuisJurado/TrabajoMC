@@ -28,7 +28,9 @@
     class="align-top col-4 col-md">Matriz Jacobiana</label>
 
   <ul class="col col-sm-8">
-    {{j}}
+    {% for i in range(j|length) %}
+      <li style="list-style-type: none;">{{j[i]}}</li>
+    {% endfor %}
   </ul>
 </div>
 <div class="row pl-2">
