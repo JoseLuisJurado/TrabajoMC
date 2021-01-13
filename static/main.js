@@ -171,8 +171,8 @@ function find_params() {
 
 }
 function orbita() {
-  var xs = [x0.value];
-  var ys = [y0.value];
+  var xs = [parseFloat(x0.value)];
+  var ys = [parseFloat(y0.value)];
 
   var itMap = Object.assign({}, values);
 
@@ -213,49 +213,41 @@ function orbita() {
   return [xs, ys];
 }
 
-function red() {
-  var xs = [x0.value];
-  var ys = [y0.value];
 
-  var itMap = Object.assign({}, values);
-
-  var n = iterations
-  var m = final_iterations
-
-  if (m < 0) {
-    alert("Las iteraciones finales (m) no pueden ser menores negativas.")
-  } else if (m == 0) {
-
-    for (let i = 0; i < n + 1; i++) {
-      x_cal = expr0.evaluate(itMap);
-      y_cal = expr1.evaluate(itMap);
-      itMap["x"] = x_cal;
-      itMap["y"] = y_cal;
-      xs.push(x_cal);
-      ys.push(y_cal);
-      xs.push(x_cal);
-      ys.push(x_cal)
-
-    }
-  } else if (m > 0) {
-
-    m += n;
-
-    for (let i = 0; i < m + 1; i++) {
-
-      x_cal = expr0.evaluate(itMap);
-      y_cal = expr1.evaluate(itMap);
-      itMap["x"] = x_cal;
-      itMap["y"] = y_cal;
-
-      if (i > n) {
-        xs.push(x_cal);
-        ys.push(y_cal);
+function atraido_por(x_inicial, y_inicial, raices){
+  var xs = [x_inicial, y_inicial]
+  var res = -1
+  var itMap = Object.assign({}, values)
+  itMap.x = xs[0]; itMap.y = xs[1];
+  for (let i = 0; i<100; i++){
+    raices.forEach(function (e){
+      let xxs = itMap.x
+      let yxs = itMap.y
+      let xe = e[0]
+      let ye = e[1]
+      let first = xxs - xe;
+      let second = yxs - ye;
+      let norm = math.norm(first, second)
+      if(norm < 0.001){
+        res = e;
+        return res;
       }
-    }
+    })
+    x_cal = expr0.evaluate(itMap);
+    y_cal = expr1.evaluate(itMap);
+    itMap.x = x_cal;
+    itMap.y = y_cal;
   }
+  return res
+}
 
-  return [xs, ys];
+function linspace(startValue, stopValue, cardinality) {
+  var arr = [];
+  var step = (stopValue - startValue) / (cardinality - 1);
+  for (var i = 0; i < cardinality; i++) {
+    arr.push(startValue + (step * i));
+  }
+  return arr;
 }
 
 function newton_rhapson(f, g, x_inicial, y_inicial, raices) {
@@ -327,32 +319,7 @@ function plot_atractor() {
 
 }
 
-function atraido_por(x_inicial, y_inicial, raices){
-  var xs = [x_inicial, y_inicial]
-  var res = -1
-  var itMap = Object.assign({}, values)
-  itMap.x = xs[0]; itMap.y = xs[1];
-  for (let i = 0; i<100; i++){
-    raices.forEach(function (e){
-      let xxs = itMap.x
-      let yxs = itMap.y
-      let xe = e[0]
-      let ye = e[1]
-      let first = xxs - xe;
-      let second = yxs - ye;
-      let norm = math.norm(first, second)
-      if(norm < 0.001){
-        res = e;
-        return res;
-      }
-    })
-    x_cal = expr0.evaluate(itMap);
-    y_cal = expr1.evaluate(itMap);
-    itMap.x = x_cal;
-    itMap.y = y_cal;
-  }
-  return res
-}
+
 function plot_cuenca() {
 
   var raices = []
@@ -366,13 +333,14 @@ function plot_cuenca() {
     raices.push([coordx, coordy])
   }
   var size = 30, z = new Array(size);
-
+  var frontera = Math.max(Math.max.apply(null, orbit[0].map(Math.abs)), Math.max.apply(null, orbit[1].map(Math.abs)));
+  var iniciales = linspace(-frontera, frontera, size)
   for(let i = 0; i<size; i++){
     z[i] = new Array(size)
   }
   for(let i = 0; i<size;i++){
     for(let j = 0; j<size;j++){
-      var p = atraido_por(i, j, raices)
+      var p = atraido_por(iniciales[i], iniciales[j], raices)
       if ( p == -1){
         z[i][j] = -1
       }else{
@@ -381,6 +349,8 @@ function plot_cuenca() {
     }
   }
   var data = [{
+    x: iniciales,
+    y: iniciales,
     z: z,
     type: 'contour'
   }
