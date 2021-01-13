@@ -173,7 +173,7 @@ function find_params() {
 function orbita() {
   var xs = [x0.value];
   var ys = [y0.value];
-  
+
   var itMap = Object.assign({}, values);
 
   var n = iterations
@@ -258,6 +258,27 @@ function red() {
   return [xs, ys];
 }
 
+function newton_rhapson(f, g, x_inicial, y_inicial, raices, n) {
+  const x = math.parse('x');
+  const y = math.parse('y');
+  var itMap = Object.assign({}, values);
+  itMap.x = x_inicial;
+  itMap.y = y_inicial;
+  var temp = math.matrix([[x_inicial], [y_inicial]])
+  for (let i = 0; i < n; i++) {
+    var fxy = math.transpose(math.matrix([[f.evaluate(itMap)], [g.evaluate(itMap)]]))
+    var Jf = math.matrix([[math.derivative(f, x).evaluate(itMap), math.derivative(f, y).evaluate(itMap)], [math.derivative(g, x).evaluate(itMap), math.derivative(g, y).evaluate(itMap)]])
+    temp = math.transpose(math.subtract(math.transpose(temp), math.divide(fxy, Jf)))
+    raices.forEach(function (e) {
+      if (math.norm(temp - e) < 1e3) {
+        return e;
+      }
+    })
+    itMap.x = temp.toArray()[0][0];
+    itMap.y = temp.toArray()[1][0];
+  }
+  return false;
+}
 
 
 function plot_orbita() {

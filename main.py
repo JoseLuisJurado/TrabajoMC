@@ -60,6 +60,46 @@ def init():
     exp_l = ["", ""]
     return render_template("index.html", f=f, g=g, A=A, n=n, m=m, x0=x0, y0=y0, exp_l=exp_l)
 
+@app.route('/basin')
+def calc_basin():
+    try:
+        if request.args.get('type') == "eq":
+            # Almacenamos las funciones, que parseamos el las siguientes lineas
+            eq = request.args.get('input').split(',')
+            values = json.loads(request.args.get('values'))
+            print(f"Valores pasados: {values}")
+            values.pop("x")
+            values.pop("y")
+            f = sympify(eq[0].replace('^', '**')).subs(values)
+            g = sympify(eq[1].replace('^', '**')).subs(values)
+        else:
+            matrix = request.args.get('input')
+            print(matrix)
+            print(type(matrix))
+            matrix = Matrix(sympify(request.args.get('input')))
+            print(f"Matrix: {matrix}")
+            matrix = matrix*(Matrix([x, y]))
+            f = matrix.tolist()[0][0]
+            g = matrix.tolist()[1][0]
+        p = 100
+        x0 = float(request.args.get("x0"))
+        y0 = float(request.args.get("y0"))
+        temp = Matrix([[x0],[y0]]).T
+        for i in range(n):
+            fxy = Matrix([f,g]).T
+            jf = fxy.jacobian(Matrix([x,y]))
+            fxy = fxy.subs({'x':x0[0],'y':x0[y]})
+            jf = fxy.subs({'x':x0[0],'y':x0[y]})
+            x0 = x0 - fxy / jf
+        return x0
+    except Exception as ex:
+        template = "Ocurrio una excepción del tipo: {0}. Los detalles son:\n{1!r}"
+        message = template.format(type(ex).__name__, ex.args)
+        print(message)
+        print(f''' Es probable que sea debido a la version instalada de Sympy.
+                    Actualmente tiene instalada la versión: {sympy.__version__}.
+                    Intente instalar la ultima version usando: pip install sympy --upgrade''')
+
 
 @app.route('/output')
 def update_funcs():
@@ -98,7 +138,6 @@ def update_funcs():
 
         # Calculamos los puntos fijos resolviendo las ecuaciones del mapa
         fixed_points = nonlinsolve([Eq(f, x), Eq(g, y)], (x, y))
-        #fixed_points = to_numerical(fixed_points)
         print(f"puntos fijos:{fixed_points}")
 
         # #Calculamos la estabilidad de los puntos fijos mediante la funcion estabilidad
