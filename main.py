@@ -105,7 +105,7 @@ def update_funcs():
         stability = points_stability(f, g, fixed_points)
         print(f"estabilidad: {stability}")
 
-        j = Matrix([f, g]).jacobian(Matrix([x, y])).tolist()
+        j = [[simplify(i) for i in x] for x in Matrix([f, g]).jacobian(Matrix([x, y])).tolist()]
         print(f"Jacobiana:{j}")
 
         f_eigen_values = list(Matrix([f, g]).jacobian(
