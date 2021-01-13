@@ -25,7 +25,6 @@ function init() {
   find_params();
   plot_orbita();
   plot_atractor();
-  plot_cuenca();
   $("#eq_input").click(function () {
     $("#input_type").html(`<label for="eq" class="col-sm-4">Introduce la ecuación</label><input text="text" id="eq" class="px-2 h-50 mt-2" name="eq" onkeyup="find_params()" value="${stored_equation[0] + "," + stored_equation[1]}" placeholder="f1(x,y),f2(x,y)" />`)
     find_params();
@@ -83,6 +82,7 @@ function init() {
         $(document).ready(function () {
           $('[data-toggle="tooltip"]').tooltip();
         });
+        plot_cuenca();
       },
       error: function (xhr) {
         console.log("Hubo un error :/")
@@ -258,17 +258,21 @@ function red() {
   return [xs, ys];
 }
 
-function newton_rhapson(f, g, x_inicial, y_inicial, raices, n) {
+function newton_rhapson(f, g, x_inicial, y_inicial, raices) {
   const x = math.parse('x');
   const y = math.parse('y');
   var itMap = Object.assign({}, values);
   itMap.x = x_inicial;
   itMap.y = y_inicial;
   var temp = math.matrix([[x_inicial], [y_inicial]])
-  for (let i = 0; i < n; i++) {
+  for (let i = 0; i < 100; i++) {
     var fxy = math.transpose(math.matrix([[f.evaluate(itMap)], [g.evaluate(itMap)]]))
     var Jf = math.matrix([[math.derivative(f, x).evaluate(itMap), math.derivative(f, y).evaluate(itMap)], [math.derivative(g, x).evaluate(itMap), math.derivative(g, y).evaluate(itMap)]])
-    temp = math.transpose(math.subtract(math.transpose(temp), math.divide(fxy, Jf)))
+    if (math.det(Jf) == 0) {
+      return math.matrix([[0], [0]])
+    } else {
+      temp = math.transpose(math.subtract(math.transpose(temp), math.divide(fxy, Jf)))
+    }
     raices.forEach(function (e) {
       if (math.norm(temp - e) < 1e3) {
         return e;
@@ -277,9 +281,8 @@ function newton_rhapson(f, g, x_inicial, y_inicial, raices, n) {
     itMap.x = temp.toArray()[0][0];
     itMap.y = temp.toArray()[1][0];
   }
-  return false;
+  return -1;
 }
-
 
 function plot_orbita() {
   // evaluate the expression repeatedly for different values of x and y
@@ -324,32 +327,65 @@ function plot_atractor() {
 
 }
 
-function plot_cuenca() {
-  cuenca = red();
-  const trace1 = {
-    x: orbit[0],
-    y: orbit[1],
-    mode: 'markers',
-    type: "scatter",
-    name: "Atractores",
-    marker: { size: 10 }
-  };
-
-  const trace2 = {
-    x: cuenca[0],
-    y: cuenca[1],
-    type: "scatter",
-    name: "Cuenca"
+function atraido_por(x_inicial, y_inicial, raices){
+  var xs = [x_inicial, y_inicial]
+  var res = -1
+  var itMap = Object.assign({}, values)
+  itMap.x = xs[0]; itMap.y = xs[1];
+  for (let i = 0; i<100; i++){
+    raices.forEach(function (e){
+      let xxs = itMap.x
+      let yxs = itMap.y
+      let xe = e[0]
+      let ye = e[1]
+      let first = xxs - xe;
+      let second = yxs - ye;
+      let norm = math.norm(first, second)
+      if(norm < 0.001){
+        res = e;
+        return res;
+      }
+    })
+    x_cal = expr0.evaluate(itMap);
+    y_cal = expr1.evaluate(itMap);
+    itMap.x = x_cal;
+    itMap.y = y_cal;
   }
+  return res
+}
+function plot_cuenca() {
 
+  var raices = []
 
-  const layout = {
-    paper_bgcolor: '#ffffff',
-    plot_bgcolor: '#ffffff',
-    title: 'Representación de los atractores'
-  };
+  const fp = document.getElementById("fixed_points")
 
-  const data = [trace1, trace2];
-  Plotly.newPlot("plot_cue", data, layout);
+  for (let i = 0; i < fp.children.length; i++) {
+    var p = fp.children[i].children[0]
+    var coordx = parseFloat(p.children[0].textContent.substring(2))
+    var coordy = parseFloat(p.children[0].textContent.substring(2))
+    raices.push([coordx, coordy])
+  }
+  var size = 30, z = new Array(size);
+
+  for(let i = 0; i<size; i++){
+    z[i] = new Array(size)
+  }
+  for(let i = 0; i<size;i++){
+    for(let j = 0; j<size;j++){
+      var p = atraido_por(i, j, raices)
+      if ( p == -1){
+        z[i][j] = -1
+      }else{
+        z[i][j] = raices.indexOf(p)
+      } 
+    }
+  }
+  var data = [{
+    z: z,
+    type: 'contour'
+  }
+  ];
+
+  Plotly.newPlot("plot_cue", data);
 
 }
