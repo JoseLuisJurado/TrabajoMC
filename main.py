@@ -116,10 +116,7 @@ def update_funcs():
 
 def points_stability(f, g, fixed_points):
     stability = list()
-    vec = Matrix([f, g])
-    fx = vec.diff(x)
-    fy = vec.diff(y)
-    Df = Matrix([[fx, fy]]).transpose()
+    Df = Matrix([f, g]).jacobian(Matrix([x, y]))
 
     for point in fixed_points:
         eigen_values = list(
