@@ -216,7 +216,7 @@ function orbita() {
 
 
 function atraido_por(x_inicial, y_inicial, raices, prec) {
-
+  var res = -1;
   var itMap = Object.assign({}, values)
   itMap.x = x_inicial; itMap.y = y_inicial;
   for (let i = 0; i < iterations; i++) {
