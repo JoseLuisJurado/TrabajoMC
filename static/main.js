@@ -84,6 +84,7 @@ function init() {
         plot_cuenca();
       },
       error: function (xhr) {
+        $("#loading").hide();
         console.log("Hubo un error :/")
         console.log(xhr)
       }
@@ -122,7 +123,6 @@ function find_params() {
   
   try {
     stored_equation = document.getElementById('eq').value.split(",");
-    
     try {
       expr0 = math.parse(stored_equation[0].replace('**', '^'))
       expr0.traverse(function (node, path, parent) {
