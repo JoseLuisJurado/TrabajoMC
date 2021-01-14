@@ -119,15 +119,17 @@ function find_params() {
   values = {}
   values["x"] = parseFloat(document.getElementById("x0").value);
   values["y"] = parseFloat(document.getElementById("y0").value);
+  
   try {
     stored_equation = document.getElementById('eq').value.split(",");
-
+    
     try {
       expr0 = math.parse(stored_equation[0].replace('**', '^'))
       expr0.traverse(function (node, path, parent) {
+        
         switch (node.type) {
           case 'SymbolNode':
-            if (!stock.includes(node.name)) {
+            if (!stock.includes(node.name) && path != 'fn') {
               params.add(node.name);
               values[node.name] = 0
             }
@@ -143,7 +145,7 @@ function find_params() {
       expr1.traverse(function (node, path, parent) {
         switch (node.type) {
           case 'SymbolNode':
-            if (!stock.includes(node.name)) {
+            if (!stock.includes(node.name) && path != 'fn') {
               params.add(node.name);
               values[node.name] = 0
             }
