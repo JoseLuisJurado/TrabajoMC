@@ -36,12 +36,28 @@
         <div class="border-bottom py-2">
           <div class="seccion">Valores</div>
           <div class="row p-2">
-            <label class="col-md" for="vars">Iteraciones (n)</label>
+            <label data-toggle="tooltip" data-placement="bottom"
+            title="Iteraciones con las que calcular la orbita" class="col-md" for="vars">Iteraciones (n)</label>
             <input class="col-sm-4" style="text-align: right" type="number" id="n" name="n" value="{{n}}" />
           </div>
           <div class="row p-2">
-            <label class="col-md" for="vars">Iteraciones finales (m, 0 si no hay final)</label>
+            <label data-toggle="tooltip" data-placement="bottom"
+            title="Iteraciones para calcular la orbita final entre las iteraciones 'n'-ésima y 'n+m'-ésima"
+            class="col-md" for="vars">Iteraciones finales (m, 0 si no hay final)</label>
             <input class="col-sm-4" style="text-align: right" type="number" id="m" name="m" value="{{m}}" />
+          </div>
+          <div class="row p-2">
+            <label data-toggle="tooltip" data-placement="bottom"
+            title="División del segmento de puntos iniciales con los que calcular las cuencas de atracción. 
+            Por ejemplo, un segmento del 0 al 9, con 10 divisiones, tendra como puntos iniciales (0,0), (0,1)... (0,9), (1,0)... (9,9)" 
+            class="col-md" for="vars">División de las cuencas de atracción</label>
+            <input class="col-sm-4" style="text-align: right" type="number" id="size" name="size" value="{{size}}" />
+          </div>    
+          <div class="row p-2">
+            <label data-toggle="tooltip" data-placement="bottom"
+            title="Decimas de precisión en coma flotante para considerar un punto inicial como parte de la cuenca de atracción de un punto" 
+            class="col-md" for="vars">Precisión</label>
+            <input class="col-sm-4" style="text-align: right" type="number" id="prec" name="prec" value="{{prec}}" />
           </div>
         </div>
         <div class="border-top py-2">
@@ -152,9 +168,11 @@
               title="La matriz jacobiana es una matriz formada por las derivadas parciales de primer orden de una función."
               class="align-top col-4 col-md">Matriz Jacobiana</label>
 
-            <ul class="col col-sm-8">
-              {{j}}
-            </ul>
+              <ul class="col col-sm-8">
+                {% for i in range(j|length) %}
+                  <li style="list-style-type: none;">{{j[i]}}</li>
+                {% endfor %}
+              </ul>
           </div>
           <div class="row pl-2">
             <label data-toggle="tooltip" data-placement="bottom" title="Sea A una matriz cuadrada de orden M. Diremos que un escalar λ ∈ K (= R o C) es un autovalor de A si existe un vector v ∈ K^m , v != 0 tal que Av = λv, en cuyo caso se dice que v es un autovector de A asociado al autovalor λ.

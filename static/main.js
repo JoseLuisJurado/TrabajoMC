@@ -180,7 +180,7 @@ function orbita() {
   var m = final_iterations
 
   if (m < 0) {
-    alert("Las iteraciones finales (m) no pueden ser menores negativas.")
+    alert("Las iteraciones finales (m) no pueden ser negativas.")
   } else if (m == 0) {
 
     for (let i = 0; i < n + 1; i++) {
@@ -214,21 +214,13 @@ function orbita() {
 }
 
 
-function atraido_por(x_inicial, y_inicial, raices){
-  var xs = [x_inicial, y_inicial]
-  var res = -1
+function atraido_por(x_inicial, y_inicial, raices, prec) {
+
   var itMap = Object.assign({}, values)
-  itMap.x = xs[0]; itMap.y = xs[1];
-  for (let i = 0; i<100; i++){
-    raices.forEach(function (e){
-      let xxs = itMap.x
-      let yxs = itMap.y
-      let xe = e[0]
-      let ye = e[1]
-      let first = xxs - xe;
-      let second = yxs - ye;
-      let norm = math.norm(first, second)
-      if(norm < 0.001){
+  itMap.x = x_inicial; itMap.y = y_inicial;
+  for (let i = 0; i < iterations; i++) {
+    raices.forEach(function (e) {
+      if (math.norm(itMap.x - e[0], itMap.y - e[1]) < parseFloat(`1e-${prec}`)) {
         res = e;
         return res;
       }
@@ -332,20 +324,21 @@ function plot_cuenca() {
     var coordy = parseFloat(p.children[0].textContent.substring(2))
     raices.push([coordx, coordy])
   }
-  var size = 30, z = new Array(size);
+  var size = parseInt(document.getElementById('size').value)
+  var z = new Array(size);
   var frontera = Math.max(Math.max.apply(null, orbit[0].map(Math.abs)), Math.max.apply(null, orbit[1].map(Math.abs)));
   var iniciales = linspace(-frontera, frontera, size)
-  for(let i = 0; i<size; i++){
+  for (let i = 0; i < size; i++) {
     z[i] = new Array(size)
   }
-  for(let i = 0; i<size;i++){
-    for(let j = 0; j<size;j++){
-      var p = atraido_por(iniciales[i], iniciales[j], raices)
-      if ( p == -1){
+  for (let i = 0; i < size; i++) {
+    for (let j = 0; j < size; j++) {
+      var p = atraido_por(iniciales[i], iniciales[j], raices, prec)
+      if (p == -1) {
         z[i][j] = -1
-      }else{
+      } else {
         z[i][j] = raices.indexOf(p)
-      } 
+      }
     }
   }
   var data = [{

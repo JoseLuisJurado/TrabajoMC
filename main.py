@@ -54,51 +54,14 @@ def init():
     m = 0
     x0 = 0.
     y0 = 1.
-    # Calculamos los puntos fijos resolviendo las ecuaciones del mapa
+    size = 10
+    prec = 3
     fixed_points = nonlinsolve([Eq(f.subs({'a':0,'b':0}), x), Eq(g.subs({'a':0,'b':0}), y)], (x, y))
-    print(f"puntos fijos:{fixed_points}")
-
-    exp_l = ["",""]
-    return render_template("index.html", f=f, g=g, A=A, n=n, m=m, x0=x0, y0=y0, fixed_points=fixed_points, exp_l=exp_l)
-    # except Exception as ex:
-    #     template = "Ocurrio una excepción del tipo: {0}. Los detalles son:\n{1!r}"
-    #     message = template.format(type(ex).__name__, ex.args)
-    #     print(message)
-    #     print(f''' Es probable que sea debido a la version instalada de Sympy.
-    #               Actualmente tiene instalada la versión: {sympy.__version__}.
-    #               Intente instalar la ultima version usando: pip install sympy --upgrade''')
-
-
-# @app.route('/basin')
-# def calc_basin():
-#     try:
-#         if request.args.get('type') == "eq":
-#             eq = request.args.get('input').split(',')
-#             values = json.loads(request.args.get('values'))
-#             print(f"Valores pasados: {values}")
-#             values.pop("x")
-#             values.pop("y")
-#             f = sympify(eq[0].replace('^', '**')).subs(values)
-#             g = sympify(eq[1].replace('^', '**')).subs(values)
-#         else:
-#             matrix = request.args.get('input')
-#             print(matrix)
-#             print(type(matrix))
-#             matrix = Matrix(sympify(request.args.get('input')))
-#             print(f"Matrix: {matrix}")
-#             matrix = matrix*(Matrix([x, y]))
-#             f = matrix.tolist()[0][0]
-#             g = matrix.tolist()[1][0]
-#         fixed_points = nonlinsolve([Eq(f, x), Eq(g, y)], (x, y))
-#         return jsonify({'fixed_points':list(fixed_points)})
-        
-#     except Exception as ex:
-#         template = "Ocurrio una excepción del tipo: {0}. Los detalles son:\n{1!r}"
-#         message = template.format(type(ex).__name__, ex.args)
-#         print(message)
-#         print(f''' Es probable que sea debido a la version instalada de Sympy.
-#                   Actualmente tiene instalada la versión: {sympy.__version__}.
-#                   Intente instalar la ultima version usando: pip install sympy --upgrade''')
+    stability = [[(-1,-1), "punto de silla"],[(0,0), "punto atractivo"]]
+    j = [[-2*x, 0], [1, 0]]
+    eigen_values = [[2,0],[0,0]]
+    exp_l = [0,1]
+    return render_template("index.html", f=f, g=g, A=A, n=n, m=m, x0=x0, y0=y0, size = size, prec = prec, fixed_points=fixed_points, stability=stability, j=j, eigen_values=eigen_values, exp_l=exp_l)
 
 
 @app.route('/output')

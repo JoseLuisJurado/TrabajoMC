@@ -13,6 +13,7 @@ var go_button = document.body;
 var points = [];
 var params = [];
 var orbit;
+var cuenca;
 var li_cache, over = false;
 // Funciones
 
@@ -34,9 +35,13 @@ function init() {
   $('#att_tab').on('shown.bs.tab', function () {
     plot_atractor();
   })
-  window.addEventListener('resize', function (){
+  $('#cue_tab').on('shown.bs.tab', function () {
+    plot_cuenca();
+  })
+  window.addEventListener('resize', function () {
     plot_atractor();
     plot_orbita();
+    plot_cuenca();
   })
   $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip();
@@ -46,6 +51,7 @@ function init() {
     grab_vars();
     plot_orbita();
     plot_atractor();
+    plot_cuenca();
     if ($("#eq_input").is(":checked")) {
       var _input = document.getElementById("eq").value;
       var _type = "eq"
@@ -62,15 +68,21 @@ function init() {
     var _x0 = parseFloat(document.getElementById("x0").value);
     var _y0 = parseFloat(document.getElementById("y0").value);
     var _values = JSON.stringify(values)
+
     $.ajax({
       url: "/output",
       type: "get",
       data: { input: _input, values: _values, type: _type, n: _iterations, m: _final_iterations, x0: _x0, y0: _y0 },
+      beforeSend: function () {
+        $("#loading").show();
+      },
       success: function (response) {
+        $("#loading").hide();
         $("#output").html(response);
         $(document).ready(function () {
           $('[data-toggle="tooltip"]').tooltip();
         });
+        plot_cuenca();
       },
       error: function (xhr) {
         console.log("Hubo un error :/")
@@ -159,9 +171,8 @@ function find_params() {
 
 }
 function orbita() {
-  // take expresion and compile in mathjs
-  var xs = [];
-  var ys = [];
+  var xs = [parseFloat(x0.value)];
+  var ys = [parseFloat(y0.value)];
 
   var itMap = Object.assign({}, values);
 
@@ -169,7 +180,7 @@ function orbita() {
   var m = final_iterations
 
   if (m < 0) {
-    alert("Las iteraciones finales (m) no pueden ser menores negativas.")
+    alert("Las iteraciones finales (m) no pueden ser negativas.")
   } else if (m == 0) {
 
     for (let i = 0; i < n + 1; i++) {
@@ -203,6 +214,60 @@ function orbita() {
 }
 
 
+function atraido_por(x_inicial, y_inicial, raices, prec) {
+
+  var itMap = Object.assign({}, values)
+  itMap.x = x_inicial; itMap.y = y_inicial;
+  for (let i = 0; i < iterations; i++) {
+    raices.forEach(function (e) {
+      if (math.norm(itMap.x - e[0], itMap.y - e[1]) < parseFloat(`1e-${prec}`)) {
+        res = e;
+        return res;
+      }
+    })
+    x_cal = expr0.evaluate(itMap);
+    y_cal = expr1.evaluate(itMap);
+    itMap.x = x_cal;
+    itMap.y = y_cal;
+  }
+  return res
+}
+
+function linspace(startValue, stopValue, cardinality) {
+  var arr = [];
+  var step = (stopValue - startValue) / (cardinality - 1);
+  for (var i = 0; i < cardinality; i++) {
+    arr.push(startValue + (step * i));
+  }
+  return arr;
+}
+
+function newton_rhapson(f, g, x_inicial, y_inicial, raices) {
+  const x = math.parse('x');
+  const y = math.parse('y');
+  var itMap = Object.assign({}, values);
+  itMap.x = x_inicial;
+  itMap.y = y_inicial;
+  var temp = math.matrix([[x_inicial], [y_inicial]])
+  for (let i = 0; i < 100; i++) {
+    var fxy = math.transpose(math.matrix([[f.evaluate(itMap)], [g.evaluate(itMap)]]))
+    var Jf = math.matrix([[math.derivative(f, x).evaluate(itMap), math.derivative(f, y).evaluate(itMap)], [math.derivative(g, x).evaluate(itMap), math.derivative(g, y).evaluate(itMap)]])
+    if (math.det(Jf) == 0) {
+      return math.matrix([[0], [0]])
+    } else {
+      temp = math.transpose(math.subtract(math.transpose(temp), math.divide(fxy, Jf)))
+    }
+    raices.forEach(function (e) {
+      if (math.norm(temp - e) < 1e3) {
+        return e;
+      }
+    })
+    itMap.x = temp.toArray()[0][0];
+    itMap.y = temp.toArray()[1][0];
+  }
+  return -1;
+}
+
 function plot_orbita() {
   // evaluate the expression repeatedly for different values of x and y
   orbit = orbita();
@@ -217,7 +282,7 @@ function plot_orbita() {
   const layout = {
     paper_bgcolor: '#ffffff',
     plot_bgcolor: '#ffffff',
-    title: 'Representación de orbita'
+    title: 'Representación de la órbita'
   };
 
   const data = [trace1];
@@ -246,3 +311,44 @@ function plot_atractor() {
 
 }
 
+
+function plot_cuenca() {
+
+  var raices = []
+
+  const fp = document.getElementById("fixed_points")
+
+  for (let i = 0; i < fp.children.length; i++) {
+    var p = fp.children[i].children[0]
+    var coordx = parseFloat(p.children[0].textContent.substring(2))
+    var coordy = parseFloat(p.children[0].textContent.substring(2))
+    raices.push([coordx, coordy])
+  }
+  var size = parseInt(document.getElementById('size').value)
+  var z = new Array(size);
+  var frontera = Math.max(Math.max.apply(null, orbit[0].map(Math.abs)), Math.max.apply(null, orbit[1].map(Math.abs)));
+  var iniciales = linspace(-frontera, frontera, size)
+  for (let i = 0; i < size; i++) {
+    z[i] = new Array(size)
+  }
+  for (let i = 0; i < size; i++) {
+    for (let j = 0; j < size; j++) {
+      var p = atraido_por(iniciales[i], iniciales[j], raices, prec)
+      if (p == -1) {
+        z[i][j] = -1
+      } else {
+        z[i][j] = raices.indexOf(p)
+      }
+    }
+  }
+  var data = [{
+    x: iniciales,
+    y: iniciales,
+    z: z,
+    type: 'contour'
+  }
+  ];
+
+  Plotly.newPlot("plot_cue", data);
+
+}
