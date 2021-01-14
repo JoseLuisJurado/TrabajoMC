@@ -121,6 +121,7 @@ def points_stability(f, g, fixed_points):
     for point in fixed_points:
         eigen_values = list(
             Df.subs({x: point[0], y: point[1]}).eigenvals().keys())
+
         if im(eigen_values[0]) != 0:
             a = re(eigen_values[0])
             b = im(eigen_values[0])
@@ -129,6 +130,16 @@ def points_stability(f, g, fixed_points):
                 stability.append((point, "punto atractivo."))
             else:
                 stability.append((point, "punto repulsivo."))
+        
+        elif len(set(eigen_values)) == 2 and im(eigen_values[1]) != 0:
+            a = re(eigen_values[1])
+            b = im(eigen_values[1])
+            r = sqrt((a**2) + (b**2))
+            if abs(r) < 1:
+                stability.append((point, "punto atractivo."))
+            else:
+                stability.append((point, "punto repulsivo.")) 
+
         else:
             if len(set(eigen_values)) == 2:
                 if (abs(eigen_values[0]) < 1 and 1 < abs(eigen_values[1])) or (abs(eigen_values[1]) < 1 and 1 < abs(eigen_values[0])):
@@ -143,6 +154,7 @@ def points_stability(f, g, fixed_points):
                     stability.append((point, "punto atractivo."))
                 else:
                     stability.append((point, "punto repulsivo."))
+
     return stability
 
 
