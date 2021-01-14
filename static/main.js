@@ -51,7 +51,6 @@ function init() {
     grab_vars();
     plot_orbita();
     plot_atractor();
-    plot_cuenca();
     if ($("#eq_input").is(":checked")) {
       var _input = document.getElementById("eq").value;
       var _type = "eq"
@@ -85,6 +84,7 @@ function init() {
         plot_cuenca();
       },
       error: function (xhr) {
+        $("#loading").hide();
         console.log("Hubo un error :/")
         console.log(xhr)
       }
@@ -122,7 +122,6 @@ function find_params() {
   values["y"] = parseFloat(document.getElementById("y0").value);
   try {
     stored_equation = document.getElementById('eq').value.split(",");
-
     try {
       expr0 = math.parse(stored_equation[0].replace('**', '^'))
       expr0.traverse(function (node, path, parent) {
