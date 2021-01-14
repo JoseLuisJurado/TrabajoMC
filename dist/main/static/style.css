@@ -1,0 +1,33 @@
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input{
+  padding-left: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+  }
+
+aside{
+    border-radius: 5px;
+}
+.seccion {
+    font-weight: 1000;
+}
+
+.plots{
+  background-color: rgb(196, 196, 196);
+  height: 100%;
+  width: 100%;
+}
+
+#loading{
+  display: none;
+}
+

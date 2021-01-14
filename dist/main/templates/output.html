@@ -1,0 +1,60 @@
+<div class="row pl-2">
+  <label data-toggle="tooltip" data-placement="bottom"
+    title="Sean (D,f) un sistema dinámico discreto y p ∈ D. Se dice que p es un punto fijo de f si f(p) = p."
+    class="align-top col-4 col-md">Puntos fijos</label>
+  <ul id="fixed_points" class="col-6 col-md-8">
+    {% for fixed_point in fixed_points %}
+    <li>
+      <ul>
+        <li>x: {{fixed_point[0]}}</li>
+        <li>y: {{fixed_point[1]}}</li>
+      </ul>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+<div class="row pl-2">
+  <label data-toggle="tooltip" data-placement="bottom" title="Para investigar la estabilidad de un punto fijo x*, debemos calcular la matriz jacobiana de la función, evaluar el punto fijo y analizar el resultado numérico obtenido de los autovalores.
+  " class="align-top col-4 col-md">Estabilidad</label>
+  <ul class="col px-1 col-sm-8">
+    {% for point in stability %}
+    <li> El punto ({{point[0][0]}},{{point[0][1]}}) tiene estabilidad: {{point[1]}}</li>
+    {% endfor %}
+  </ul>
+</div>
+<div class="row pl-2">
+  <label data-toggle="tooltip" data-placement="bottom"
+    title="La matriz jacobiana es una matriz formada por las derivadas parciales de primer orden de una función."
+    class="align-top col-4 col-md">Matriz Jacobiana</label>
+
+  <ul class="col col-sm-8">
+    {% for i in range(j|length) %}
+      <li style="list-style-type: none;">{{j[i]}}</li>
+    {% endfor %}
+  </ul>
+</div>
+<div class="row pl-2">
+  <label data-toggle="tooltip" data-placement="bottom" title="Sea A una matriz cuadrada de orden M. Diremos que un escalar λ ∈ K (= R o C) es un autovalor de A si existe un vector v ∈ K^m , v != 0 tal que Av = λv, en cuyo caso se dice que v es un autovector de A asociado al autovalor λ.
+  " class="align-top col-4 col-md">Autovalores</label>
+  <ul id="eigen_vals" class="col col-sm-8">
+    {% for i in range(eigen_values|length) %}
+    <li>&lambda;<sub>{{i}}</sub>: {{eigen_values[i]}}</li>
+    {% endfor %}
+  </ul>
+</div>
+<div class="row pl-2">
+  <label data-toggle="tooltip" data-placement="bottom" title="El Exponente Lyapunov o Exponente característico Lyapunov de un sistema dinámico es una cantidad que caracteriza el grado de separación de dos trayectorias infinitesimalmente cercanas.
+  " class="align-top col-4 col-md">Números de Lyapunov </label>
+  <ul class="col col-sm-8">
+    <li>L<sub>1</sub>: {{n_l[0]}}</li>
+    <li>L<sub>2</sub>: {{n_l[1]}}</li>
+  </ul>
+</div>
+<div class="row pl-2">
+  <label data-toggle="tooltip" data-placement="bottom" title="El Exponente Lyapunov o Exponente característico Lyapunov de un sistema dinámico es una cantidad que caracteriza el grado de separación de dos trayectorias infinitesimalmente cercanas.
+  " class="align-top col-4 col-md">Exponentes de Lyapunov </label>
+  <ul class="col col-sm-8">
+    <li>&lambda;<sub>1</sub>: {{exp_l[0]}}</li>
+    <li>&lambda;<sub>2</sub>: {{exp_l[1]}}</li>
+  </ul>
+</div>
