@@ -1,7 +1,4 @@
-//Librerias
-
-//Parámetros
-const contenido = document.getElementById("content");
+//Parámetros y variables
 var matrix;
 var stored_equation = [];
 var expr0;
@@ -9,18 +6,15 @@ var expr1;
 var iterations = 0;
 var final_iterations = 0;
 var values = {}
-var go_button = document.body;
-var points = [];
+var go_button;
 var params = [];
 var orbit;
 var cuenca;
-var li_cache, over = false;
+
 // Funciones
 
 
 function init() {
-  //const contenido_basico = "\\templates\\contenido_basico.html";
-  //print_mode(contenido_basico, contenido);
   grab_vars();
   find_params();
   plot_orbita();
@@ -120,13 +114,13 @@ function find_params() {
   values = {}
   values["x"] = parseFloat(document.getElementById("x0").value);
   values["y"] = parseFloat(document.getElementById("y0").value);
-  
+
   try {
     stored_equation = document.getElementById('eq').value.split(",");
     try {
       expr0 = math.parse(stored_equation[0].replace('**', '^'))
       expr0.traverse(function (node, path, parent) {
-        
+
         switch (node.type) {
           case 'SymbolNode':
             if (!stock.includes(node.name) && path != 'fn') {
@@ -171,6 +165,7 @@ function find_params() {
   }
 
 }
+
 function orbita() {
   var xs = [parseFloat(x0.value)];
   var ys = [parseFloat(y0.value)];
@@ -243,37 +238,8 @@ function linspace(startValue, stopValue, cardinality) {
   return arr;
 }
 
-function newton_rhapson(f, g, x_inicial, y_inicial, raices) {
-  const x = math.parse('x');
-  const y = math.parse('y');
-  var itMap = Object.assign({}, values);
-  itMap.x = x_inicial;
-  itMap.y = y_inicial;
-  var temp = math.matrix([[x_inicial], [y_inicial]])
-  for (let i = 0; i < 100; i++) {
-    var fxy = math.transpose(math.matrix([[f.evaluate(itMap)], [g.evaluate(itMap)]]))
-    var Jf = math.matrix([[math.derivative(f, x).evaluate(itMap), math.derivative(f, y).evaluate(itMap)], [math.derivative(g, x).evaluate(itMap), math.derivative(g, y).evaluate(itMap)]])
-    if (math.det(Jf) == 0) {
-      return math.matrix([[0], [0]])
-    } else {
-      temp = math.transpose(math.subtract(math.transpose(temp), math.divide(fxy, Jf)))
-    }
-    raices.forEach(function (e) {
-      if (math.norm(temp - e) < 1e3) {
-        return e;
-      }
-    })
-    itMap.x = temp.toArray()[0][0];
-    itMap.y = temp.toArray()[1][0];
-  }
-  return -1;
-}
-
 function plot_orbita() {
-  // evaluate the expression repeatedly for different values of x and y
-  orbit = orbita();
-
-  // render the plot using plotly
+  orbit = orbita()
   const trace1 = {
     x: orbit[0],
     y: orbit[1],
@@ -291,8 +257,6 @@ function plot_orbita() {
 }
 
 function plot_atractor() {
-
-  // render the plot using plotly
   const trace1 = {
     x: orbit[0],
     y: orbit[1],
@@ -325,6 +289,7 @@ function plot_cuenca() {
     var coordy = parseFloat(p.children[0].textContent.substring(2))
     raices.push([coordx, coordy])
   }
+
   var size = parseInt(document.getElementById('size').value)
   var z = new Array(size);
   var frontera = Math.max(Math.max.apply(null, orbit[0].map(Math.abs)), Math.max.apply(null, orbit[1].map(Math.abs)));
