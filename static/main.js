@@ -51,7 +51,6 @@ function init() {
     grab_vars();
     plot_orbita();
     plot_atractor();
-    plot_cuenca();
     if ($("#eq_input").is(":checked")) {
       var _input = document.getElementById("eq").value;
       var _type = "eq"
