@@ -45,8 +45,9 @@ def init():
     stability = [[(-1,-1), "punto de silla"],[(0,0), "punto atractivo"]]
     j = [[-2*x, 0], [1, 0]]
     eigen_values = [[2,0],[0,0]]
-    exp_l = [0,1]
-    return render_template("index.html", f=f, g=g, A=A, n=n, m=m, x0=x0, y0=y0, size = size, prec = prec, fixed_points=fixed_points, stability=stability, j=j, eigen_values=eigen_values, exp_l=exp_l)
+    n_l = [0,1]
+    exp_l = ['zoo',0]
+    return render_template("index.html", f=f, g=g, A=A, n=n, m=m, x0=x0, y0=y0, size = size, prec = prec, fixed_points=fixed_points, stability=stability, j=j, eigen_values=eigen_values, n_l = n_l, exp_l=exp_l)
 
 
 @app.route('/output')
@@ -101,10 +102,12 @@ def update_funcs():
         eigen_values = [list(simplify(f.subs({x:p[0], y:p[1]})) for f in f_eigen_values) for p in fixed_points]
         
         print(f"Autovalores: {eigen_values}")
-        exp_l = lyapunov_exp(f, g, x0, y0)
+        n_l = lyapunov_n(f, g, x0, y0)
+        print(f"Exponentes de Lyapunov {n_l}")
+        exp_l = list(map(lambda x: ln(x), n_l))
         print(f"Exponentes de Lyapunov {exp_l}")
 
-        return render_template('output.html', fixed_points=fixed_points, stability=stability, j=j, eigen_values=eigen_values, exp_l=exp_l)
+        return render_template('output.html', fixed_points=fixed_points, stability=stability, j=j, eigen_values=eigen_values, n_l = n_l, exp_l=exp_l)
     except Exception as ex:
         template = "Ocurrio una excepción del tipo: {0}. Los detalles son:\n{1!r}"
         message = template.format(type(ex).__name__, ex.args)
@@ -158,7 +161,7 @@ def points_stability(f, g, fixed_points):
     return stability
 
 
-def lyapunov_exp(f, g, x0, y0):
+def lyapunov_n(f, g, x0, y0):
     vec = Matrix([f, g])
     fx = vec.diff(x)
     fy = vec.diff(y)
