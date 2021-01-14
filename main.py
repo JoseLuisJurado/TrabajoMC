@@ -4,20 +4,6 @@ import sympy
 import os
 import sys
 import json
-init_printing()
-
-file_dir = __file__[:-7]
-if file_dir:
-    os.chdir(file_dir)
-else:
-    file_dir = "./"
-
-'''
-Las siguientes dos lineas borran el archivo 'python3.stackdump' generado
-durante la ejecución de código cuando se produce un core_dump
-'''
-if os.path.exists("python3.stackdump"):
-    os.remove("python3.stackdump")
 
 if getattr(sys, 'frozen', False):
     template_folder = os.path.join(sys._MEIPASS, 'templates')
@@ -26,7 +12,6 @@ else:
     app = Flask(__name__)
 
 print("Se inicia la aplicación")
-
 
 x, y = symbols('x y')
 n = None
