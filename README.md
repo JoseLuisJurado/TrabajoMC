@@ -1,4 +1,4 @@
-# Sistemas dinámicos discretos
+# Representación sistemas dinámicos discretos
 
 ### Instrucciones de ejecución 
 
